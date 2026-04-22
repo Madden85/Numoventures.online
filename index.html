@@ -1,111 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="ms">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NUMO VENTURES</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin:0;
-    font-family:Arial;
-    background:#0a0f1f;
-    color:white;
-    text-align:center;
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+font-family:'Poppins',sans-serif;
+color:#eef8ff;
+background:
+linear-gradient(rgba(2,8,20,0.75),rgba(2,8,20,0.9)),
+url("bg-premium.jpg") center/cover no-repeat fixed;
 }
 
-.container {
-    width:95%;
-    max-width:400px;
-    margin:auto;
+/* HERO */
+.hero{padding:20px;text-align:center;}
+
+.logo{width:100px;margin:auto;}
+
+.site-title{font-size:30px;font-weight:800;}
+
+.tagline{
+font-family:'Caveat';
+font-size:28px;
+color:#4ce3ff;
 }
 
-/* BOX */
-.box {
-    background:linear-gradient(180deg,#0f1c3a,#07122a);
-    border-radius:20px;
-    padding:15px;
-    margin:15px 0;
+/* SECTION */
+.section{width:95%;max-width:400px;margin:auto;}
+
+/* TESTIMONI */
+.testimoni-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:10px;
 }
 
-/* PLAN */
-.plan {
-    background:rgba(255,255,255,0.05);
-    border-radius:15px;
-    padding:15px;
-    margin-bottom:10px;
-    cursor:pointer;
+.testimoni-card img{
+width:100%;
+height:auto;
+border-radius:10px;
 }
 
-.plan.active {
-    border:2px solid #00d4ff;
+/* PRODUCT */
+.box{
+background:linear-gradient(#0f1c3a,#07122a);
+padding:15px;
+border-radius:15px;
+margin:15px 0;
 }
 
-/* PRICE */
-.price {
-    color:#00ff9d;
-    font-size:20px;
-    font-weight:bold;
+.plan{
+background:rgba(255,255,255,0.05);
+padding:12px;
+border-radius:10px;
+margin-top:8px;
+cursor:pointer;
+}
+
+.plan.active{
+border:1px solid #4ce3ff;
+}
+
+.price{
+color:#6dffb0;
+font-weight:bold;
 }
 
 /* BUTTON */
-.order-btn {
-    display:none;
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:20px;
-    background:linear-gradient(90deg,#2bc0ff,#297dff);
-    color:white;
-    font-size:18px;
-    margin-top:10px;
-}
-
-.order-btn.show {
-    display:block;
-}
-
-/* TESTIMONI */
-.testimoni-grid {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.testimoni img {
-    width:100%;
-    height:auto;
-    border-radius:10px;
-}
-
-/* GUARANTEE */
-.guarantee {
-    margin-top:10px;
-    font-weight:bold;
-    color:#00d4ff;
+.btn-order{
+display:block;
+margin-top:10px;
+padding:12px;
+background:linear-gradient(90deg,#11b8ff,#297dff);
+border-radius:10px;
+text-align:center;
+text-decoration:none;
+color:white;
+font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<h2>NUMO VENTURES</h2>
-
-<!-- TESTIMONI -->
-<div class="box">
-<h3>Testimoni</h3>
-<div id="testimoni" class="testimoni-grid"></div>
-
-<div class="guarantee">Gerenti tak menyesal!</div>
+<div class="hero">
+<img src="Numologo.jpg" class="logo">
+<h1 class="site-title">AKAUN PREMIUM MURAH</h1>
+<p class="tagline">kami janji tak sidai</p>
 </div>
 
-<!-- PRODUK -->
+<div class="section">
+
+<!-- TESTIMONI ATAS -->
+<h2>Testimoni</h2>
+<div id="testimoni" class="testimoni-grid"></div>
+
+<h2>Senarai Produk</h2>
 <div id="products"></div>
 
 </div>
 
 <script src="app.js"></script>
-
 </body>
 </html>
