@@ -13,8 +13,8 @@ const products = [
       { duration: "1 Bulan", price: "RM25", orderText: "Netflix 1 bulan", order: true },
       { duration: "2 Bulan", price: "RM45", orderText: "Netflix 2 bulan", order: true },
       { duration: "3 Bulan Promo", price: "RM60", note: "Promo", orderText: "Netflix 3 bulan", order: true },
-      { duration: "6 Bulan", price: "RM120", order: false },
-      { duration: "12 Bulan", price: "RM230", order: false }
+      { duration: "6 Bulan", price: "RM120", order: true },
+      { duration: "12 Bulan", price: "RM230", order: true }
     ]
   },
   {
@@ -30,8 +30,8 @@ const products = [
         plans: [
           { duration: "1 Bulan", price: "RM16", orderText: "YT Sendiri 1 bulan", order: true },
           { duration: "3 Bulan", price: "RM45", orderText: "YT Sendiri 3 bulan", order: true },
-          { duration: "6 Bulan", price: "RM85", order: false },
-          { duration: "12 Bulan", price: "RM144", order: false }
+          { duration: "6 Bulan", price: "RM85", order: true },
+          { duration: "12 Bulan", price: "RM144", order: true }
         ]
       },
       {
@@ -43,8 +43,8 @@ const products = [
         plans: [
           { duration: "1 Bulan", price: "RM10", orderText: "YT Seller 1 bulan", order: true },
           { duration: "3 Bulan", price: "RM27", orderText: "YT Seller 3 bulan", order: true },
-          { duration: "6 Bulan", price: "RM48", order: false },
-          { duration: "12 Bulan", price: "RM84", order: false }
+          { duration: "6 Bulan", price: "RM48", order: true },
+          { duration: "12 Bulan", price: "RM84", order: true }
         ]
       }
     ]
@@ -56,8 +56,8 @@ const products = [
       { duration: "1 Bulan", price: "RM25", orderText: "Disney 1 bulan", order: true },
       { duration: "2 Bulan", price: "RM45", orderText: "Disney 2 bulan", order: true },
       { duration: "Promo 3 Bulan", price: "RM60", orderText: "Disney 3 bulan", order: true },
-      { duration: "6 Bulan", price: "RM120", order: false },
-      { duration: "12 Bulan", price: "RM230", order: false }
+      { duration: "6 Bulan", price: "RM120", order: true },
+      { duration: "12 Bulan", price: "RM230", order: true }
     ]
   },
   {
@@ -66,8 +66,8 @@ const products = [
     plans: [
       { duration: "1 Bulan", price: "RM25", orderText: "Sooka 1 bulan", order: true },
       { duration: "2 Bulan", price: "RM46", orderText: "Sooka 2 bulan", order: true },
-      { duration: "6 Bulan", price: "RM120", order: false },
-      { duration: "12 Bulan", price: "RM216", order: false }
+      { duration: "6 Bulan", price: "RM120", order: true },
+      { duration: "12 Bulan", price: "RM216", order: true }
     ]
   },
   {
@@ -76,8 +76,8 @@ const products = [
     plans: [
       { duration: "1 Bulan", price: "RM15", orderText: "Viu 1 bulan", order: true },
       { duration: "2 Bulan", price: "RM26", orderText: "Viu 2 bulan", order: true },
-      { duration: "6 Bulan", price: "RM66", order: false },
-      { duration: "12 Bulan", price: "RM120", order: false }
+      { duration: "6 Bulan", price: "RM66", order: true },
+      { duration: "12 Bulan", price: "RM120", order: true }
     ]
   },
   {
@@ -87,8 +87,8 @@ const products = [
       { duration: "1 Bulan", price: "RM15", orderText: "IQIYI 1 bulan", order: true },
       { duration: "2 Bulan", price: "RM26", orderText: "IQIYI 2 bulan", order: true },
       { duration: "Promo 3 Bulan", price: "RM33", orderText: "IQIYI 3 bulan", order: true },
-      { duration: "6 Bulan", price: "RM66", order: false },
-      { duration: "12 Bulan", price: "RM120", order: false }
+      { duration: "6 Bulan", price: "RM66", order: true },
+      { duration: "12 Bulan", price: "RM120", order: true }
     ]
   },
   {
@@ -104,8 +104,8 @@ const products = [
       { duration: "1 Bulan", price: "RM15", orderText: "Spotify 1 bulan", order: true },
       { duration: "2 Bulan", price: "RM28", orderText: "Spotify 2 bulan", order: true },
       { duration: "Promo 2 Bulan", price: "RM25", note: "Promo", orderText: "Spotify promo", order: true },
-      { duration: "6 Bulan", price: "RM72", order: false },
-      { duration: "12 Bulan", price: "RM120", order: false }
+      { duration: "6 Bulan", price: "RM72", order: true },
+      { duration: "12 Bulan", price: "RM120", order: true }
     ]
   }
 ];
