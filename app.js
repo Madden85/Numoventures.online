@@ -14,35 +14,25 @@ const products = [
     name: "Youtube Premium",
     plans: [
       { text: "1 Bulan", price: "RM16" },
-      { text: "3 Bulan", price: "RM45" },
-      { text: "6 Bulan", price: "RM85" }
+      { text: "3 Bulan", price: "RM45" }
     ]
   },
   {
     name: "Disney+",
     plans: [
       { text: "1 Bulan", price: "RM25" },
-      { text: "2 Bulan", price: "RM45" },
-      { text: "3 Bulan", price: "RM60" }
-    ]
-  },
-  {
-    name: "Spotify",
-    plans: [
-      { text: "1 Bulan", price: "RM15" },
-      { text: "2 Bulan", price: "RM28" }
+      { text: "2 Bulan", price: "RM45" }
     ]
   }
 ];
 
 /* TESTIMONI */
-const testimoniContainer = document.getElementById("testimoni");
+const testimoni = document.getElementById("testimoni");
 
 for(let i=1;i<=8;i++){
-  testimoniContainer.innerHTML += `
+  testimoni.innerHTML += `
     <div class="testimoni">
       <img src="testimoni${i}.jpg">
-      <p>Testimoni ${i}</p>
     </div>
   `;
 }
@@ -54,14 +44,15 @@ products.forEach((p,index)=>{
 
   let plansHTML = p.plans.map((plan,i)=>`
     <div class="plan" onclick="selectPlan(${index},${i})">
-      ${plan.text}<br>
+      <b>${plan.text}</b><br>
+      <span>Pakej tersedia</span><br><br>
       <span class="price">${plan.price}</span>
     </div>
   `).join("");
 
   container.innerHTML += `
     <div class="box">
-      <div class="product-title">${p.name}</div>
+      <h3>${p.name}</h3>
 
       ${plansHTML}
 
@@ -73,21 +64,20 @@ products.forEach((p,index)=>{
 /* SELECT PLAN */
 function selectPlan(productIndex, planIndex){
 
-  const productBox = document.querySelectorAll(".box")[productIndex+1];
-  const plans = productBox.querySelectorAll(".plan");
+  const boxes = document.querySelectorAll(".box")[productIndex+1];
+  const plans = boxes.querySelectorAll(".plan");
 
   plans.forEach(p=>p.classList.remove("active"));
   plans[planIndex].classList.add("active");
 
-  const selectedPlan = products[productIndex].plans[planIndex];
+  const selected = products[productIndex].plans[planIndex];
 
   const btn = document.getElementById("btn"+productIndex);
-
   btn.classList.add("show");
 
   btn.onclick = () => {
     window.open(
-      telegram + encodeURIComponent(products[productIndex].name + " - " + selectedPlan.text),
+      telegram + encodeURIComponent(products[productIndex].name + " - " + selected.text),
       "_blank"
     );
   };
