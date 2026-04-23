@@ -151,7 +151,7 @@
     .tagline {
       font-family: 'Caveat', cursive;
       font-size: clamp(35px, 5vw, 40px);
-      color: #990000;
+      color: #74FFB7;
       text-shadow: 0 0 18px rgba(76, 227, 255, 0.22);
     }
 
@@ -164,20 +164,18 @@
     }
 
     .guarantee {
-      margin-top: 18px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 20px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(76, 227, 255, 0.12), rgba(41, 125, 255, 0.1));
-      border: 1px solid rgba(76, 227, 255, 0.18);
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 700;
-      box-shadow: 0 8px 22px rgba(17, 184, 255, 0.16);
-    }
+  margin-bottom: 6px;
+  margin-top: 18px;
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #ffd76a, #fff2b7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(255, 215, 106, 0.35);
+}
 
     .hero-points {
       display: grid;
@@ -235,6 +233,7 @@
     }
 
     .product-card {
+  margin-bottom: 2px;
       position: relative;
       background: var(--glass);
       border: 1px solid var(--border);
@@ -440,8 +439,9 @@
 
     .testimoni-card img {
       width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
+      height: 200px;
+      object-fit: contain;
+      padding: 5px;
       display: block;
       background: rgba(255,255,255,0.04);
     }
@@ -525,6 +525,7 @@
       }
 
       .product-card {
+  margin-bottom: 2px;
         padding: 16px;
         border-radius: 20px;
       }
@@ -548,7 +549,56 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
-  </style>
+  
+.plan-option {
+  gap: 6px;
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.05);
+  cursor:pointer;
+}
+
+.plan-option.active {
+  border:1px solid #4ce3ff;
+  background:rgba(76,227,255,0.15);
+}
+
+/* SINCE 2015 lines */
+.since-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+.since-line span {
+  color: #ffd76a;
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  position: relative;
+  padding: 0 12px;
+}
+.since-line span::before,
+.since-line span::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #ffd76a);
+}
+.since-line span::before {
+  right: 100%;
+}
+.since-line span::after {
+  left: 100%;
+  background: linear-gradient(to left, transparent, #ffd76a);
+}
+
+</style>
+
 </head>
 <body>
   <div class="page">
@@ -558,35 +608,33 @@
           <div class="logo-wrap">
             <img src="Numologo.jpg" alt="NUMO VENTURES" class="logo">
           </div>
-          <div class="eyebrow">SINCE 2015</div>
+
+<div class="since-line"><span>SINCE 2015</span></div>
+
           <div class="eyebrow">Premium Accounts • Trusted Seller</div>
           <h1 class="site-title">AKAUN PREMIUM MURAH</h1>
           <p class="tagline">kami janji tak sidai  🤙 </p>
           <p class="hero-desc">
-            <ul>
-                <li>Pilih pakej langganan yang anda nak dan tekan order</li>
-                <br>
-                <li>Akaun premium kami 100% legit dan tidak menyalahi undang2</li>
-                <br>
-                <li>Full warranty - Jika ada masalah dengan akaun,boleh terus berhubung dengan admin. Admin akan fix masalah atau ganti akaun baru</li>
-            </ul>
-          </p>
+✔️ Pilih pakej langganan yang awak nak dan tekan order<br><br>
+✔️ Semua akaun premium kami 100% legit dan tidak menyalahi undang2<br><br>
+✔️ <span style="color:#6dffb0;font-weight:700;">FULL WARRANTY!</span> Jika ada sebarang masalah, boleh hubungi admin. Admin akan fix masalah atau ganti akaun baru
+          <br><br>✔️ Trusted seller sejak 2015<br><br>✔️ Fast response & support aktif</p>
 
           <div class="guarantee">Gerenti tak menyesal!</div>
         </div>
 
         <div class="hero-points">
           <div class="hero-point">
-            <strong>Order Mudah</strong>
-            <span>Pilih pakej dan terus tekan button Telegram untuk tempahan cepat.</span>
+            <strong>Cara Order Mudah</strong>
+            <span>Pilih pakej langganan dan terus tekan button dapatkan akaun untuk membuat tempahan</span>
           </div>
           <div class="hero-point">
-            <strong>Interface Premium</strong>
-            <span>Warna, button dan susun atur lebih mahal dan lebih nampak eksklusif.</span>
+            <strong>Akaun 100% legit dan selamat</strong>
+            <span>Semua akaun premium, verified dan trusted. Akaun kami bukan akaun recycle atau fake</span>
           </div>
           <div class="hero-point">
-            <strong>Lebih Menonjol</strong>
-            <span>Setiap box diblur supaya tulisan dan pakej lebih jelas dilihat.</span>
+            <strong>WARRANTY sepenuhnya</strong>
+            <span>kami beri warranty penuh! Jika langgan 12 bulan, warranty akan cover selama 12 bulan</span>
           </div>
         </div>
       </div>
@@ -595,7 +643,7 @@
     <main class="section-wrap">
       <h2 class="section-title">Senarai Produk</h2>
       <p class="section-subtitle">
-        Semua data produk dikekalkan. Link order hanya dipaparkan pada pakej yang memang ada button order sebelum ini.
+        Semua senarai produk premium kami ada di bawah. Boleh pilih langganan yang anda mahukan
       </p>
 
       <div id="products" class="products-grid"></div>
@@ -603,20 +651,20 @@
       <section class="testimoni-section">
         <h2 class="section-title">Testimoni Pelanggan</h2>
         <p class="section-subtitle">
-          Bukti pelanggan puas hati dan repeat order. Gambar testimoni akan dipaparkan seperti dalam folder asal.
+          Bukti semua pelanggan kami amat berpuashati dan ada yang dah repeat order. Kami amat mementingkan kepuasan pelanggan
         </p>
         <div id="testimoni" class="testimoni-grid"></div>
       </section>
     </main>
 
     <section class="footer-box">
-      <h3>Ready nak order?</h3>
+      <h3>Dah ready nak dapatkan akaun?</h3>
       <p>
-        Tekan button di mana-mana pakej yang ada label order dan terus masuk Telegram owner.
-        Susun atur dah dibuat supaya nampak lebih kemas, premium dan lebih kuat untuk convert buyer.
+        Tekan button dapatkan akaun di bawah, anda akan dibawa terus ke telegram admin
       </p>
-      <a class="footer-action" href="https://t.me/ownernumoventures?text=Hi nak order">Order Sekarang</a>
+      <a class="footer-action" href="https://t.me/ownernumoventures?text=Hi nak order">Dapatkan akaun Sekarang</a>
     </section>
+<div style="text-align:center;color:#b9d7ea;font-size:13px;margin:10px 0 20px;">NuMoVentures - Since 2015</div>
   </div>
 
   <script src="app.js"></script>
