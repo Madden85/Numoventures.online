@@ -10,7 +10,7 @@ const products = [
       "Tiada masalah screen limit sebab 1 profile 1 user je yang guna"
     ],
     plans: [
-      { duration: "PROMO 1 Bulan", price: "RM20", orderText: "NetflixPROMO 1 bulan", order: true },
+      { duration: "PROMO 1 Bulan", price: "RM20", orderText: "Netflix 1 bulan", order: true },
       { duration: "PROMO 2 Bulan", price: "RM40", orderText: "NetflixPROMO 2 bulan", order: true },
       { duration: "PROMO 3 Bulan", price: "RM60", note: "NetflixPROMO 3 Bulan", orderText: "Netflix 3 bulan", order: true },
       { duration: "6 Bulan", price: "RM120", order: false },
