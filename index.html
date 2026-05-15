@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NUMO VENTURES</title>
+  <title>NUMO VENTURES | Akaun Premium Murah</title>
+  <meta name="description" content="Akaun premium murah, trusted seller sejak 2015, full warranty dan support aktif." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -16,22 +17,27 @@
     }
 
     :root {
-      --bg-dark: #04101f;
-      --bg-darker: #020814;
-      --glass: rgba(8, 22, 40, 0.58);
-      --glass-strong: rgba(8, 22, 40, 0.78);
-      --border: rgba(112, 220, 255, 0.18);
-      --text: #eef8ff;
-      --muted: #b9d7ea;
-      --soft: #8eb7cc;
+      --bg: #030816;
+      --bg-2: #061323;
+      --card: rgba(9, 22, 40, 0.72);
+      --card-2: rgba(255, 255, 255, 0.06);
+      --line: rgba(139, 225, 255, 0.16);
+      --line-strong: rgba(139, 225, 255, 0.34);
+      --text: #f4fbff;
+      --muted: #b8d0df;
+      --soft: #83a7bb;
       --cyan: #4ce3ff;
-      --cyan-2: #11b8ff;
-      --blue: #297dff;
+      --blue: #267dff;
+      --green: #68ffb0;
       --gold: #ffd76a;
-      --green: #6dffb0;
-      --pink: #ff74c8;
-      --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      --shadow-glow: 0 0 30px rgba(76, 227, 255, 0.18);
+      --orange: #ffb35f;
+      --danger: #ff6b8f;
+      --purple: #d58cff;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.38);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --container: min(1120px, 92vw);
     }
 
     html {
@@ -39,632 +45,1179 @@
     }
 
     body {
+      min-height: 100vh;
       font-family: 'Poppins', sans-serif;
       color: var(--text);
       background:
-        linear-gradient(rgba(2, 8, 20, 0.75), rgba(2, 8, 20, 0.9)),
-        url("bg-premium.jpg") center center / cover no-repeat fixed;
-      min-height: 100vh;
+        linear-gradient(180deg, rgba(3, 8, 22, 0.82), rgba(3, 8, 22, 0.96)),
+        url("bg-premium.jpg") center top / cover no-repeat fixed,
+        radial-gradient(circle at 20% 0%, rgba(76, 227, 255, 0.2), transparent 28%),
+        var(--bg);
       overflow-x: hidden;
+      padding-bottom: 88px;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(circle at top left, rgba(76, 227, 255, 0.16), transparent 30%),
-        radial-gradient(circle at top right, rgba(41, 125, 255, 0.12), transparent 28%),
-        radial-gradient(circle at bottom center, rgba(17, 184, 255, 0.08), transparent 35%);
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at top left, rgba(76, 227, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 90% 14%, rgba(255, 215, 106, 0.11), transparent 24%),
+        radial-gradient(circle at bottom, rgba(38, 125, 255, 0.16), transparent 36%);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
     }
 
     .page {
-      position: relative;
-      z-index: 1;
       width: 100%;
     }
 
-    .hero {
-      width: min(1120px, 92%);
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      width: 100%;
+      background: rgba(3, 8, 22, 0.72);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      width: var(--container);
       margin: 0 auto;
-      padding: 32px 0 18px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.1;
+      letter-spacing: 0.4px;
+    }
+
+    .brand span span {
+      color: var(--soft);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .topbar-cta {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      color: #05101d;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), #fff3b2);
+      box-shadow: 0 10px 26px rgba(255, 215, 106, 0.24);
+      white-space: nowrap;
+    }
+
+    .hero {
+      width: var(--container);
+      margin: 0 auto;
+      padding: 22px 0 16px;
     }
 
     .hero-card {
-      background: rgba(3, 15, 30, 0.58);
-      border: 1px solid rgba(76, 227, 255, 0.16);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-radius: 28px;
-      box-shadow: var(--shadow), var(--shadow-glow);
-      padding: 26px 20px 22px;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 36%),
+        rgba(5, 17, 34, 0.78);
+      box-shadow: var(--shadow), 0 0 46px rgba(76, 227, 255, 0.10);
+      padding: 18px;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      right: -80px;
+      top: -75px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(76, 227, 255, 0.34), transparent 68%);
+      filter: blur(2px);
     }
 
     .hero-card::after {
       content: "";
       position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(76, 227, 255, 0.06), transparent 35%, rgba(255, 255, 255, 0.02));
-      pointer-events: none;
+      width: 180px;
+      height: 180px;
+      left: -80px;
+      bottom: -95px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255, 215, 106, 0.25), transparent 68%);
+      filter: blur(2px);
     }
 
-    .hero-top {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-main {
+      display: grid;
+      justify-items: center;
       text-align: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .logo-wrap {
-      width: 112px;
-      height: 112px;
-      border-radius: 26px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 12px 26px rgba(0,0,0,0.35);
-      overflow: hidden;
+      width: 104px;
+      height: 104px;
+      border-radius: 28px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
     }
 
     .logo {
       width: 100%;
       height: 100%;
+      border-radius: 23px;
       object-fit: cover;
+      display: block;
     }
 
-    .eyebrow {
+    .since-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
+      gap: 9px;
+      padding: 8px 13px;
       border-radius: 999px;
-      background: rgba(76, 227, 255, 0.08);
-      border: 1px solid rgba(76, 227, 255, 0.16);
-      color: #c8f6ff;
+      color: #fff7d4;
+      background: rgba(255, 215, 106, 0.10);
+      border: 1px solid rgba(255, 215, 106, 0.22);
       font-size: 12px;
-      letter-spacing: 0.8px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      font-weight: 600;
-      margin-top: 4px;
     }
 
-    .site-title {
-      font-size: clamp(28px, 6vw, 52px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 18px rgba(76, 227, 255, 0.22);
-      background: linear-gradient(90deg, #ffffff, #9cefff 45%, #ffd76a);
+    .hero h1 {
+      max-width: 820px;
+      font-size: clamp(34px, 9vw, 76px);
+      line-height: 0.98;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      text-wrap: balance;
+      background: linear-gradient(90deg, #ffffff, #a8f3ff 50%, #fff0a8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 22px rgba(76, 227, 255, 0.18));
     }
 
     .tagline {
       font-family: 'Caveat', cursive;
-      font-size: clamp(35px, 5vw, 40px);
-      color: #74FFB7;
-      text-shadow: 0 0 18px rgba(76, 227, 255, 0.22);
+      font-size: clamp(32px, 9vw, 48px);
+      color: var(--green);
+      line-height: 1;
+      text-shadow: 0 0 22px rgba(104, 255, 176, 0.22);
     }
 
     .hero-desc {
-      max-width: 760px;
+      max-width: 720px;
       color: var(--muted);
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.8;
-      margin-top: 6px;
     }
 
-    .guarantee {
-  margin-bottom: 6px;
-  margin-top: 18px;
-  display: block;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  background: linear-gradient(90deg, #ffd76a, #fff2b7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 12px rgba(255, 215, 106, 0.35);
-}
-
-    .hero-points {
+    .hero-actions {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 24px;
+      width: 100%;
+      gap: 10px;
+      margin-top: 4px;
     }
 
-    .hero-point {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+    .btn-primary,
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 13px 18px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 900;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-primary {
+      color: #04101f;
+      background: linear-gradient(135deg, var(--gold), #fff5ba);
+      box-shadow: 0 14px 28px rgba(255, 215, 106, 0.24);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-primary:hover,
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .trust-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 11px;
+      align-items: start;
+      padding: 14px;
       border-radius: 20px;
-      padding: 16px;
-      text-align: center;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.10);
     }
 
-    .hero-point strong {
+    .trust-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(76, 227, 255, 0.11);
+      border: 1px solid rgba(76, 227, 255, 0.16);
+    }
+
+    .trust-card strong {
       display: block;
-      font-size: 15px;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-
-    .hero-point span {
       font-size: 13px;
-      color: var(--soft);
-      line-height: 1.6;
+      margin-bottom: 3px;
     }
 
-    .section-wrap {
-      width: min(1120px, 92%);
-      margin: 18px auto 28px;
+    .trust-card span {
+      display: block;
+      color: var(--soft);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    .section {
+      width: var(--container);
+      margin: 0 auto;
+      padding: 18px 0;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .section-label {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
     }
 
     .section-title {
-      font-size: clamp(22px, 4vw, 34px);
-      font-weight: 800;
-      margin-bottom: 8px;
-      color: #f4fbff;
+      font-size: clamp(25px, 7vw, 42px);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.8px;
     }
 
     .section-subtitle {
+      max-width: 720px;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.7;
-      margin-bottom: 22px;
+    }
+
+    .sync-status {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      color: var(--soft);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .sync-status.ok {
+      color: #baffd5;
+      border-color: rgba(104, 255, 176, 0.20);
+      background: rgba(104, 255, 176, 0.08);
+    }
+
+    .sync-status.error {
+      color: #ffd2dc;
+      border-color: rgba(255, 107, 143, 0.22);
+      background: rgba(255, 107, 143, 0.08);
+    }
+
+    .product-nav-wrap {
+      position: sticky;
+      top: 70px;
+      z-index: 15;
+      margin: 0 -4vw 16px;
+      padding: 10px 4vw;
+      background: linear-gradient(180deg, rgba(3, 8, 22, 0.92), rgba(3, 8, 22, 0.66));
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .product-nav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 2px 0;
+    }
+
+    .product-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .product-chip {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 42px;
+      padding: 10px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      grid-template-columns: 1fr;
+      gap: 15px;
     }
 
     .product-card {
-  margin-bottom: 2px;
+      scroll-margin-top: 136px;
       position: relative;
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 20px;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      box-shadow: var(--shadow), var(--shadow-glow);
       overflow: hidden;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      padding: 16px;
     }
 
-    .product-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(76, 227, 255, 0.32);
-      box-shadow: 0 22px 40px rgba(0,0,0,0.45), 0 0 34px rgba(76, 227, 255, 0.14);
+    .product-featured {
+      border-color: rgba(255, 215, 106, 0.36);
+      box-shadow: var(--shadow), 0 0 38px rgba(255, 215, 106, 0.10);
     }
 
-    .product-card::before {
-      content: "";
+    .product-card.stock-off {
+      border-color: rgba(255, 107, 143, 0.26);
+    }
+
+    .product-glow {
       position: absolute;
       inset: 0;
-      background: linear-gradient(145deg, rgba(255,255,255,0.06), transparent 45%);
       pointer-events: none;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.07), transparent 38%),
+        radial-gradient(circle at 92% 0%, rgba(76, 227, 255, 0.14), transparent 30%);
     }
 
-    .product-head {
-      display: flex;
-      align-items: start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
+    .product-head,
+    .features,
+    .plans,
+    .sub-list {
       position: relative;
       z-index: 1;
     }
 
-    .product-title {
+    .product-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .product-identity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .product-icon {
+      flex: 0 0 auto;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       font-size: 22px;
-      font-weight: 800;
-      line-height: 1.2;
-      color: #ffffff;
+    }
+
+    .product-kicker {
+      color: var(--soft);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 3px;
+    }
+
+    .product-title {
+      font-size: clamp(19px, 5vw, 25px);
+      line-height: 1.12;
+      font-weight: 900;
     }
 
     .product-badge {
-      flex-shrink: 0;
-      font-size: 11px;
-      font-weight: 700;
-      color: #03111f;
-      background: linear-gradient(135deg, var(--gold), #fff2b7);
-      padding: 7px 11px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
       border-radius: 999px;
-      box-shadow: 0 6px 16px rgba(255, 215, 106, 0.25);
+      color: #05101d;
+      background: linear-gradient(135deg, var(--gold), #fff0a2);
+      font-size: 10.5px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(255, 215, 106, 0.18);
+      white-space: nowrap;
     }
 
     .features {
       list-style: none;
       display: grid;
-      gap: 9px;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
+      gap: 8px;
+      margin: 10px 0 14px;
     }
 
     .features li {
-      color: #dff5ff;
-      font-size: 13.5px;
-      line-height: 1.6;
-      padding-left: 18px;
       position: relative;
+      padding-left: 24px;
+      color: #dff5ff;
+      font-size: 13px;
+      line-height: 1.6;
     }
 
     .features li::before {
-      content: "✦";
+      content: "✓";
       position: absolute;
       left: 0;
-      top: 0;
-      color: var(--cyan);
-      font-size: 12px;
+      top: 1px;
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: #04101f;
+      background: var(--green);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .sub-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
     }
 
     .sub-block {
-      margin-bottom: 16px;
-      padding: 14px;
+      padding: 13px;
       border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      position: relative;
-      z-index: 1;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .sub-block.stock-off {
+      border-color: rgba(255, 107, 143, 0.24);
+      background: rgba(255, 107, 143, 0.055);
+    }
+
+    .sub-title-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .sub-title {
       font-size: 14px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 10px;
+      font-weight: 900;
+    }
+
+    .sub-pill {
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .sub-pill.stock-pill {
+      color: #ffd2dc;
     }
 
     .plans {
       display: grid;
       gap: 10px;
-      position: relative;
-      z-index: 1;
     }
 
-    .plan {
+    .plan-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(3, 9, 22, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .plan-card.has-promo {
+      border-color: rgba(255, 215, 106, 0.22);
+      background: linear-gradient(145deg, rgba(255, 215, 106, 0.08), rgba(3, 9, 22, 0.56) 44%);
+    }
+
+    .plan-card.stock-disabled {
+      opacity: 0.78;
+      border-color: rgba(255, 107, 143, 0.20);
+    }
+
+    .plan-main {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(3, 13, 24, 0.55);
-      border: 1px solid rgba(76, 227, 255, 0.12);
-    }
-
-    .plan-text {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+      gap: 10px;
+      min-width: 0;
     }
 
     .plan-duration {
+      color: #ffffff;
       font-size: 14px;
-      font-weight: 700;
-      color: #f6fcff;
+      font-weight: 800;
     }
 
     .plan-note {
-      font-size: 12px;
-      color: #88acc0;
+      flex: 0 0 auto;
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: #061323;
+      background: linear-gradient(135deg, var(--green), #d7ffe9);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
     }
 
-    .price {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--green);
-      text-shadow: 0 0 14px rgba(109, 255, 176, 0.15);
+    .promo-info {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      margin-top: 7px;
     }
 
-    .btn-order {
+    .promo-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      min-width: 110px;
-      padding: 11px 14px;
-      border-radius: 14px;
-      text-decoration: none;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .badge-gold {
+      color: #211300;
+      background: linear-gradient(135deg, #ffd76a, #fff4b7);
+    }
+
+    .badge-green {
+      color: #03190c;
+      background: linear-gradient(135deg, #68ffb0, #d8ffe9);
+    }
+
+    .badge-red {
+      color: #fff6f8;
+      background: linear-gradient(135deg, #ff466f, #ff8aa5);
+    }
+
+    .badge-blue {
+      color: #f8feff;
+      background: linear-gradient(135deg, #267dff, #4ce3ff);
+    }
+
+    .badge-purple,
+    .badge-pink,
+    .badge-pink-purple {
+      color: #fff7ff;
+      background: linear-gradient(135deg, #9d5cff, #ff74c8);
+    }
+
+    .badge-dark {
       color: #ffffff;
-      font-size: 13px;
+      background: linear-gradient(135deg, #101827, #344055);
+    }
+
+    .promo-note {
+      color: #fff1bd;
+      font-size: 11.5px;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--cyan-2), var(--blue));
-      box-shadow: 0 10px 22px rgba(41, 125, 255, 0.28);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      line-height: 1.35;
+    }
+
+    .plan-side {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .price-wrap {
+      display: grid;
+      gap: 2px;
+      min-width: 70px;
+    }
+
+    .plan-price {
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 900;
+      text-shadow: 0 0 18px rgba(104, 255, 176, 0.18);
       white-space: nowrap;
     }
 
-    .btn-order:hover {
-      transform: translateY(-1px) scale(1.02);
-      box-shadow: 0 14px 28px rgba(41, 125, 255, 0.35);
-      filter: brightness(1.05);
+    .plan-price.old-price {
+      color: rgba(184, 208, 223, 0.78);
+      font-size: 12px;
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-shadow: none;
     }
 
-    .btn-disabled {
+    .promo-price {
+      color: var(--green);
+      font-size: 19px;
+      font-weight: 900;
+      white-space: nowrap;
+      text-shadow: 0 0 18px rgba(104, 255, 176, 0.18);
+    }
+
+    .plan-btn {
+      min-height: 42px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 110px;
-      padding: 11px 14px;
+      padding: 10px 13px;
+      border-radius: 13px;
+      color: #04101f;
+      background: linear-gradient(135deg, var(--cyan), #89f4ff);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 900;
+      box-shadow: 0 12px 22px rgba(76, 227, 255, 0.14);
+      white-space: nowrap;
+    }
+
+    .plan-btn-soft {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .plan-btn-disabled {
+      cursor: not-allowed;
+      color: #ffc9d5;
+      background: rgba(255, 107, 143, 0.10);
+      border: 1px solid rgba(255, 107, 143, 0.22);
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .step-card {
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .step-no {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
       border-radius: 14px;
-      color: #8ca7b8;
-      font-size: 12px;
-      font-weight: 700;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 11px;
+      color: #061323;
+      background: linear-gradient(135deg, var(--gold), #fff2b3);
+      font-weight: 900;
+    }
+
+    .step-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .step-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
     }
 
     .testimoni-section {
-      margin-top: 24px;
+      padding-bottom: 8px;
     }
 
     .testimoni-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
+      grid-auto-flow: column;
+      grid-auto-columns: 78%;
+      gap: 13px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 2px 1px 10px;
+    }
+
+    .testimoni-grid::-webkit-scrollbar {
+      display: none;
     }
 
     .testimoni-card {
-      background: rgba(6, 18, 34, 0.62);
-      border: 1px solid rgba(76, 227, 255, 0.14);
-      border-radius: 20px;
+      scroll-snap-align: start;
       overflow: hidden;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 12px 26px rgba(0,0,0,0.35);
-      transition: transform 0.25s ease;
-    }
-
-    .testimoni-card:hover {
-      transform: translateY(-4px);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
     }
 
     .testimoni-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: contain;
-      padding: 5px;
       display: block;
-      background: rgba(255,255,255,0.04);
+      width: 100%;
+      height: 330px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.045);
+      padding: 8px;
     }
 
     .testimoni-card p {
-      font-size: 13px;
-      color: #d9f2ff;
-      font-weight: 600;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
+      color: #e8f8ff;
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .footer-box {
-      width: min(1120px, 92%);
-      margin: 0 auto 30px;
-      background: rgba(4, 15, 30, 0.66);
-      border: 1px solid rgba(76, 227, 255, 0.14);
-      border-radius: 24px;
-      padding: 20px;
+      width: var(--container);
+      margin: 14px auto 22px;
+      padding: 22px 16px;
       text-align: center;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 36%),
+        rgba(5, 17, 34, 0.78);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
     }
 
     .footer-box h3 {
-      font-size: 22px;
+      font-size: clamp(23px, 7vw, 36px);
+      line-height: 1.1;
       margin-bottom: 8px;
-      color: #ffffff;
+      font-weight: 900;
     }
 
     .footer-box p {
+      max-width: 620px;
+      margin: 0 auto;
       color: var(--muted);
-      line-height: 1.7;
       font-size: 14px;
+      line-height: 1.7;
     }
 
     .footer-action {
-      margin-top: 14px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 13px 18px;
-      border-radius: 14px;
-      text-decoration: none;
+      min-height: 50px;
+      margin-top: 16px;
+      padding: 13px 20px;
+      border-radius: 16px;
       color: #04101f;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ffd76a, #fff2b7);
-      box-shadow: 0 12px 26px rgba(255, 215, 106, 0.24);
+      background: linear-gradient(135deg, var(--gold), #fff2b0);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: 0 14px 28px rgba(255, 215, 106, 0.20);
     }
 
-    @media (max-width: 980px) {
-      .products-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .testimoni-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    .copyright {
+      width: var(--container);
+      margin: 0 auto 18px;
+      text-align: center;
+      color: var(--soft);
+      font-size: 12.5px;
+      line-height: 1.6;
     }
 
-    @media (max-width: 680px) {
+    .mobile-sticky {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 20px;
+      background: rgba(3, 8, 22, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .mobile-sticky span {
+      padding-left: 4px;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .mobile-sticky strong {
+      display: block;
+      color: var(--text);
+      font-size: 12.5px;
+    }
+
+    .mobile-sticky a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      color: #04101f;
+      background: linear-gradient(135deg, var(--gold), #fff3b2);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 620px) {
+      body {
+        padding-bottom: 0;
+      }
+
+      .topbar-cta {
+        display: inline-flex;
+      }
+
+      .mobile-sticky {
+        display: none;
+      }
+
       .hero {
-        width: 94%;
-        padding-top: 20px;
+        padding-top: 32px;
       }
 
       .hero-card {
-        border-radius: 22px;
-        padding: 20px 14px 18px;
+        padding: 28px;
       }
 
-      .hero-points {
-        grid-template-columns: 1fr;
+      .hero-actions {
+        width: auto;
+        grid-template-columns: auto auto;
+        justify-content: center;
       }
 
-      .section-wrap,
-      .footer-box {
-        width: 94%;
+      .trust-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
 
-      .product-card {
-  margin-bottom: 2px;
-        padding: 16px;
-        border-radius: 20px;
+      .plan-card {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
       }
 
-      .product-head {
-        flex-direction: column;
-        align-items: flex-start;
+      .plan-side {
+        grid-template-columns: auto auto;
       }
 
-      .plan {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .btn-order,
-      .btn-disabled {
-        width: 100%;
+      .steps {
+        grid-template-columns: repeat(3, 1fr);
       }
 
       .testimoni-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-auto-columns: 42%;
       }
     }
-  
-.plan-option {
-  gap: 6px;
-  display:flex;
-  justify-content:space-between;
-  padding:10px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.05);
-  cursor:pointer;
-}
 
-.plan-option.active {
-  border:1px solid #4ce3ff;
-  background:rgba(76,227,255,0.15);
-}
+    @media (min-width: 920px) {
+      .hero-card {
+        padding: 34px;
+      }
 
-/* SINCE 2015 lines */
-.since-line {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-}
-.since-line span {
-  color: #ffd76a;
-  font-size: 13px;
-  letter-spacing: 2px;
-  font-weight: 600;
-  position: relative;
-  padding: 0 12px;
-}
-.since-line span::before,
-.since-line span::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 80px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #ffd76a);
-}
-.since-line span::before {
-  right: 100%;
-}
-.since-line span::after {
-  left: 100%;
-  background: linear-gradient(to left, transparent, #ffd76a);
-}
+      .hero-content {
+        grid-template-columns: 1.15fr 0.85fr;
+        align-items: center;
+      }
 
-</style>
+      .hero-main {
+        justify-items: start;
+        text-align: left;
+      }
 
+      .hero-actions {
+        justify-content: start;
+      }
+
+      .trust-grid {
+        margin-top: 0;
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .product-featured {
+        grid-column: span 2;
+      }
+
+      .testimoni-grid {
+        display: grid;
+        grid-auto-flow: initial;
+        grid-auto-columns: initial;
+        grid-template-columns: repeat(5, 1fr);
+        overflow: visible;
+      }
+
+      .testimoni-card img {
+        height: 220px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="page">
-    <header class="hero">
-      <div class="hero-card">
-        <div class="hero-top">
-          <div class="logo-wrap">
-            <img src="Numologo.jpg" alt="NUMO VENTURES" class="logo">
-          </div>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#top" aria-label="NUMO VENTURES">
+          <img class="brand-logo" src="Numologo.jpg" alt="NUMO VENTURES">
+          <span>
+            <strong>NUMO VENTURES</strong>
+            <span>Trusted Since 2015</span>
+          </span>
+        </a>
 
-<div class="since-line"><span>SINCE 2015</span></div>
-
-          <div class="eyebrow">Premium Accounts • Trusted Seller</div>
-          <h1 class="site-title">AKAUN PREMIUM MURAH</h1>
-          <p class="tagline">kami janji tak sidai  🤙 </p>
-          <p class="hero-desc">
-✔️ Pilih pakej langganan yang awak nak dan tekan order<br><br>
-✔️ Semua akaun premium kami 100% legit dan tidak menyalahi undang2<br><br>
-✔️ <span style="color:#6dffb0;font-weight:700;">FULL WARRANTY!</span> Jika ada sebarang masalah, boleh hubungi admin. Admin akan fix masalah atau ganti akaun baru
-          <br><br>✔️ Trusted seller sejak 2015<br><br>✔️ Fast response & support aktif</p>
-
-          <div class="guarantee">Gerenti tak menyesal!</div>
-        </div>
-
-        <div class="hero-points">
-          <div class="hero-point">
-            <strong>Cara Order Mudah</strong>
-            <span>Pilih pakej langganan dan terus tekan button dapatkan akaun untuk membuat tempahan</span>
-          </div>
-          <div class="hero-point">
-            <strong>Akaun 100% legit dan selamat</strong>
-            <span>Semua akaun premium, verified dan trusted. Akaun kami bukan akaun recycle atau fake</span>
-          </div>
-          <div class="hero-point">
-            <strong>WARRANTY sepenuhnya</strong>
-            <span>kami beri warranty penuh! Jika langgan 12 bulan, warranty akan cover selama 12 bulan</span>
-          </div>
-        </div>
+        <a class="topbar-cta" href="https://t.me/ownernumoventures?text=Hi%20nak%20order" target="_blank" rel="noopener noreferrer">Order Sekarang</a>
       </div>
     </header>
 
-    <main class="section-wrap">
-      <h2 class="section-title">Senarai Produk</h2>
-      <p class="section-subtitle">
-        Semua senarai produk premium kami ada di bawah. Boleh pilih langganan yang anda mahukan
-      </p>
+    <main id="top">
+      <section class="hero">
+        <div class="hero-card">
+          <div class="hero-content">
+            <div class="hero-main">
+              <div class="logo-wrap">
+                <img src="Numologo.jpg" alt="NUMO VENTURES" class="logo">
+              </div>
 
-      <div id="products" class="products-grid"></div>
+              <div class="since-pill">⭐ Since 2015 • Full Warranty</div>
 
-      <section class="testimoni-section">
-        <h2 class="section-title">Testimoni Pelanggan</h2>
-        <p class="section-subtitle">
-          Bukti semua pelanggan kami amat berpuashati dan ada yang dah repeat order. Kami amat mementingkan kepuasan pelanggan
-        </p>
+              <h1>Akaun Premium Murah & Trusted</h1>
+              <p class="tagline">kami janji tak sidai 🤙</p>
+
+              <p class="hero-desc">
+                Pilih pakej yang awak nak, tekan order, dan terus deal dengan admin di Telegram.
+                Semua akaun premium kami legit, selamat, support aktif dan warranty penuh sepanjang tempoh langganan.
+              </p>
+
+              <div class="hero-actions">
+                <a class="btn-primary" href="#senarai-produk">Lihat Senarai Produk</a>
+                <a class="btn-secondary" href="https://t.me/ownernumoventures?text=Hi%20nak%20order" target="_blank" rel="noopener noreferrer">Chat Admin</a>
+              </div>
+            </div>
+
+            <div class="trust-grid" aria-label="Kelebihan NUMO VENTURES">
+              <div class="trust-card">
+                <div class="trust-icon">⚡</div>
+                <div>
+                  <strong>Order Mudah</strong>
+                  <span>Pilih produk, tekan button order dan terus masuk Telegram admin.</span>
+                </div>
+              </div>
+              <div class="trust-card">
+                <div class="trust-icon">🛡️</div>
+                <div>
+                  <strong>Warranty Penuh</strong>
+                  <span>Jika ada masalah, admin akan bantu fix atau ganti akaun.</span>
+                </div>
+              </div>
+              <div class="trust-card">
+                <div class="trust-icon">✅</div>
+                <div>
+                  <strong>Trusted Seller</strong>
+                  <span>Beroperasi sejak 2015 dengan support aktif dan fast response.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="senarai-produk" class="section">
+        <div class="section-head">
+          <p class="section-label">Premium Store</p>
+          <h2 class="section-title">Senarai Produk</h2>
+          <p class="section-subtitle">
+            Ada pelbagai pilihan langganan. Pilih pakej langganan yang awak nak.
+          </p>
+          <div id="syncStatus" class="sync-status">⏳ Semak stok & promo...</div>
+        </div>
+
+        <div class="product-nav-wrap">
+          <div id="productNav" class="product-nav" aria-label="Pilih produk"></div>
+        </div>
+
+        <div id="products" class="products-grid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <p class="section-label">Cara Order</p>
+          <h2 class="section-title">3 langkah mudah</h2>
+          <p class="section-subtitle">3 langkah mudah untuk melanggan dengan kami</p>
+        </div>
+
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-no">1</div>
+            <strong>Pilih produk</strong>
+            <p>Pilih senarai produk dan pilih pakej langganan yang sesuai.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-no">2</div>
+            <strong>Tekan order</strong>
+            <p>Tekan button order dan terus ke Telegram admin</p>
+          </div>
+          <div class="step-card">
+            <div class="step-no">3</div>
+            <strong>Admin proses</strong>
+            <p>Admin akan bantu setup dan bagi detail akaun premium anda.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section testimoni-section">
+        <div class="section-head">
+          <p class="section-label">Bukti Customer</p>
+          <h2 class="section-title">Testimoni Pelanggan</h2>
+          <p class="section-subtitle">
+            Ramai pelanggan berpuas hati dan repeat order dengan NUMO VENTURES.
+          </p>
+        </div>
+
         <div id="testimoni" class="testimoni-grid"></div>
       </section>
-    </main>
 
-    <section class="footer-box">
-      <h3>Dah ready nak dapatkan akaun?</h3>
-      <p>
-        Tekan button dapatkan akaun di bawah, anda akan dibawa terus ke telegram admin
-      </p>
-      <a class="footer-action" href="https://t.me/ownernumoventures?text=Hi nak order">Dapatkan akaun Sekarang</a>
-    </section>
-<div style="text-align:center;color:#b9d7ea;font-size:13px;margin:10px 0 20px;">NuMoVentures - Since 2015</div>
+      <section class="footer-box">
+        <h3>Dah ready nak dapatkan akaun?</h3>
+        <p>Tekan button di bawah dan terus chat dengan admin Telegram NUMO VENTURES.</p>
+        <a class="footer-action" href="https://t.me/ownernumoventures?text=Hi%20nak%20order" target="_blank" rel="noopener noreferrer">Dapatkan Akaun Sekarang</a>
+      </section>
+
+      <p class="copyright">NuMoVentures • Since 2015 • © <span id="currentYear"></span></p>
+    </main>
+  </div>
+
+  <div class="mobile-sticky">
+    <span><strong>Nak order sekarang?</strong> Terus chat admin Telegram</span>
+    <a href="https://t.me/ownernumoventures?text=Hi%20nak%20order" target="_blank" rel="noopener noreferrer">Order</a>
   </div>
 
   <script src="app.js"></script>
