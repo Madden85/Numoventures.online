@@ -1,13 +1,10 @@
+/***********************
+ * NUMO CUSTOMER WEBSITE
+ * V4 - Sooka device availability
+ ***********************/
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec";
 const telegramUsername = "ownernumoventures";
-
-// Apps Script Web App URL untuk STOCK_CONTROL + PROMO_CONTROL
-const WEBSITE_CONTROL_API_URL = "https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec";
-
-let websiteControl = {
-  stock: [],
-  promos: [],
-  meta: {}
-};
 
 const products = [
   {
@@ -134,17 +131,76 @@ const productIcons = {
   "SPOTIFY PREMIUM": "🎧"
 };
 
+const sookaDevices = [
+  { key: "TV", label: "TV" },
+  { key: "PHONE", label: "Phone" },
+  { key: "TABLET", label: "Tablet" }
+];
+
+let websiteControl = {
+  stock: [],
+  promos: [],
+  meta: {},
+  loaded: false
+};
+
+document.addEventListener("DOMContentLoaded", async () => {
+  renderProductNav();
+  renderProducts();
+  renderTestimonies();
+  initProductNav();
+  initFooterYear();
+
+  await loadWebsiteControl();
+
+  renderProducts();
+});
+
+async function loadWebsiteControl() {
+  try {
+    const result = await jsonp({
+      mode: "getWebsiteControl",
+      _: Date.now()
+    });
+
+    if (!result.ok) {
+      throw new Error(result.error || "Gagal load website control.");
+    }
+
+    websiteControl = {
+      stock: result.data?.stock || [],
+      promos: result.data?.promos || [],
+      meta: result.data?.meta || {},
+      loaded: true
+    };
+
+    showSyncNote("");
+
+  } catch (error) {
+    websiteControl.loaded = false;
+    showSyncNote("Status stok/promo gagal sync buat sementara. Harga asal masih dipaparkan.");
+  }
+}
+
 function createTelegramLink(text = "Hi nak order") {
   return `https://t.me/${telegramUsername}?text=${encodeURIComponent(text)}`;
 }
 
 function safeText(value = "") {
-  return String(value)
+  return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function safeAttr(value = "") {
+  return safeText(value);
+}
+
+function normalize(value = "") {
+  return String(value || "").trim().toUpperCase();
 }
 
 function slugify(text = "") {
@@ -155,10 +211,6 @@ function slugify(text = "") {
     .replace(/^-+|-+$/g, "");
 }
 
-function normalizeKey(value = "") {
-  return String(value).trim().toUpperCase();
-}
-
 function getProductIcon(productName = "") {
   return productIcons[productName] || "⭐";
 }
@@ -167,102 +219,104 @@ function getTotalPlans(product) {
   if (product.sections) {
     return product.sections.reduce((total, section) => total + (section.plans?.length || 0), 0);
   }
+
   return product.plans?.length || 0;
 }
 
-function getStockSetting(productName = "", sectionName = "ALL") {
-  const section = sectionName || "ALL";
-  const exact = websiteControl.stock.find(item =>
-    normalizeKey(item.product) === normalizeKey(productName) &&
-    normalizeKey(item.section || "ALL") === normalizeKey(section)
+function getStock(product, section = "ALL") {
+  return websiteControl.stock.find(item =>
+    normalize(item.product) === normalize(product) &&
+    normalize(item.section || "ALL") === normalize(section || "ALL")
   );
-
-  if (exact) return exact;
-
-  const fallback = websiteControl.stock.find(item =>
-    normalizeKey(item.product) === normalizeKey(productName) &&
-    normalizeKey(item.section || "ALL") === "ALL"
-  );
-
-  return fallback || {
-    product: productName,
-    section,
-    status: "ON",
-    stockText: "Habis Stok"
-  };
 }
 
-function isStockOn(productName = "", sectionName = "ALL") {
-  const stock = getStockSetting(productName, sectionName);
-  return normalizeKey(stock.status || "ON") !== "OFF";
+function isStockOn(product, section = "ALL") {
+  const stock = getStock(product, section);
+
+  if (!stock) return true;
+
+  return normalize(stock.status) !== "OFF";
 }
 
-function getStockText(productName = "", sectionName = "ALL") {
-  const stock = getStockSetting(productName, sectionName);
-  return stock.stockText || "Habis Stok";
+function getStockText(product, section = "ALL") {
+  const stock = getStock(product, section);
+  return stock?.stockText || "Habis Stok";
 }
 
-function getPromoSetting(productName = "", sectionName = "ALL", duration = "") {
-  const section = sectionName || "ALL";
+function getSookaDeviceStates() {
+  const deviceRows = sookaDevices.map(device => {
+    const stock = getStock("SOOKA PREMIUM", device.key);
+
+    return {
+      ...device,
+      exists: Boolean(stock),
+      status: stock ? (normalize(stock.status) === "OFF" ? "OFF" : "ON") : "MISSING",
+      stockText: stock?.stockText || "Habis Stok"
+    };
+  });
+
+  const hasDeviceRows = deviceRows.some(device => device.exists);
+
+  if (!hasDeviceRows) {
+    const fallbackOn = isStockOn("SOOKA PREMIUM", "ALL");
+
+    return sookaDevices.map(device => ({
+      ...device,
+      exists: false,
+      status: fallbackOn ? "ON" : "OFF",
+      stockText: getStockText("SOOKA PREMIUM", "ALL")
+    }));
+  }
+
+  return deviceRows;
+}
+
+function getAvailableSookaDevices() {
+  return getSookaDeviceStates().filter(device => device.status === "ON");
+}
+
+function isProductAvailable(productName, section = "ALL") {
+  if (productName === "SOOKA PREMIUM") {
+    return getAvailableSookaDevices().length > 0;
+  }
+
+  return isStockOn(productName, section);
+}
+
+function getPromo(product, section, duration) {
   return websiteControl.promos.find(item =>
-    normalizeKey(item.product) === normalizeKey(productName) &&
-    normalizeKey(item.section || "ALL") === normalizeKey(section) &&
-    normalizeKey(item.duration) === normalizeKey(duration)
+    normalize(item.product) === normalize(product) &&
+    normalize(item.section || "ALL") === normalize(section || "ALL") &&
+    normalize(item.duration) === normalize(duration)
   );
 }
 
 function isPromoActive(promo) {
-  return Boolean(
-    promo &&
-    normalizeKey(promo.promoActive) === "YES" &&
-    String(promo.promoPrice || "").trim()
-  );
+  if (!promo) return false;
+  return normalize(promo.promoActive) === "YES" || normalize(promo.promoActive) === "ON";
+}
+
+function getBadgeText(promo) {
+  if (!promo) return "";
+  const preset = promo.badgePreset || "Promo";
+  return preset === "Custom" ? (promo.badgeCustomText || "Promo") : (promo.badgeText || preset || "Promo");
 }
 
 function getBadgeColorClass(color = "Gold") {
-  const normalized = String(color || "Gold").toLowerCase().replace(/\s+/g, "-").replace(/\//g, "-");
+  const value = normalize(color);
 
-  if (normalized.includes("green")) return "badge-green";
-  if (normalized.includes("red")) return "badge-red";
-  if (normalized.includes("blue")) return "badge-blue";
-  if (normalized.includes("purple") || normalized.includes("pink")) return "badge-purple";
-  if (normalized.includes("dark") || normalized.includes("black")) return "badge-dark";
+  if (value === "GREEN") return "green";
+  if (value === "RED") return "red";
+  if (value === "BLUE") return "blue";
+  if (value === "PURPLE" || value === "PINK") return "purple";
+  if (value === "DARK" || value === "BLACK") return "dark";
 
-  return "badge-gold";
-}
-
-function updateSyncStatus(status, message) {
-  const el = document.getElementById("syncStatus");
-  if (!el) return;
-
-  el.classList.remove("ok", "error");
-  if (status) el.classList.add(status);
-  el.textContent = message;
-}
-
-async function loadWebsiteControl() {
-  updateSyncStatus("", "⏳ Semak stok & promo...");
-
-  try {
-    const url = `${WEBSITE_CONTROL_API_URL}?mode=getWebsiteControl&t=${Date.now()}`;
-    const response = await fetch(url);
-    const result = await response.json();
-
-    if (!result.ok) {
-      throw new Error(result.error || "API error");
-    }
-
-    websiteControl = result.data || { stock: [], promos: [], meta: {} };
-    updateSyncStatus("ok", "✅ Stok & promo terkini");
-  } catch (error) {
-    console.error("Website control load failed:", error);
-    websiteControl = { stock: [], promos: [], meta: {} };
-    updateSyncStatus("error", "⚠️ Gagal sync. Harga asal dipaparkan");
-  }
+  return "gold";
 }
 
 function renderFeatures(features = []) {
   if (!features.length) return "";
+
   return `
     <ul class="features">
       ${features.map(item => `<li>${safeText(item)}</li>`).join("")}
@@ -270,66 +324,88 @@ function renderFeatures(features = []) {
   `;
 }
 
-function renderPrice(plan = {}, promo = null) {
-  if (isPromoActive(promo)) {
-    return `
-      <div class="price-wrap">
-        <span class="plan-price old-price">${safeText(plan.price)}</span>
-        <strong class="promo-price">${safeText(promo.promoPrice)}</strong>
+function renderSookaDeviceBox() {
+  const devices = getSookaDeviceStates();
+  const available = devices.filter(device => device.status === "ON").map(device => device.label);
+
+  const subtitle = available.length
+    ? `Device available sekarang: ${available.join(", ")}`
+    : "Semua device Sooka sedang habis stok buat masa ini.";
+
+  return `
+    <div class="device-box">
+      <div>
+        <div class="device-title">📡 Pilihan Device Sooka</div>
+        <div class="device-subtitle">${safeText(subtitle)}</div>
       </div>
-    `;
-  }
 
-  return `
-    <div class="price-wrap">
-      <strong class="plan-price">${safeText(plan.price)}</strong>
-    </div>
-  `;
-}
+      <div class="device-pills">
+        ${devices.map(device => {
+          const cls = device.status === "ON" ? "on" : device.status === "OFF" ? "off" : "missing";
+          const text = device.status === "ON" ? "Available" : device.status === "OFF" ? "Habis" : "Belum setup";
 
-function renderPromoInfo(promo = null) {
-  if (!isPromoActive(promo)) return "";
-
-  const badgeText = promo.badgeText || promo.badgePreset || "Promo";
-  const badgeClass = getBadgeColorClass(promo.badgeColor || "Gold");
-  const note = promo.note ? `<span class="promo-note">${safeText(promo.note)}</span>` : "";
-
-  return `
-    <div class="promo-info">
-      <span class="promo-badge ${badgeClass}">${safeText(badgeText)}</span>
-      ${note}
+          return `<span class="device-pill ${cls}">${safeText(device.label)} • ${safeText(text)}</span>`;
+        }).join("")}
+      </div>
     </div>
   `;
 }
 
 function renderPlan(plan = {}, productName = "", sectionName = "ALL") {
-  const promo = getPromoSetting(productName, sectionName, plan.duration);
-  const promoActive = isPromoActive(promo);
-  const stockOn = isStockOn(productName, sectionName);
-  const stockText = getStockText(productName, sectionName);
+  const productAvailable = isProductAvailable(productName, sectionName);
+  const promo = getPromo(productName, sectionName, plan.duration);
+  const promoActive = isPromoActive(promo) && promo.promoPrice;
+  const displayPrice = promoActive ? promo.promoPrice : plan.price;
+  const badgeText = promoActive ? getBadgeText(promo) : "";
+  const badgeClass = promoActive ? getBadgeColorClass(promo.badgeColor) : "";
+  const promoNote = promoActive && promo.note ? promo.note : "";
+  const normalNote = plan.note ? plan.note : "";
 
   const orderText = plan.orderText || `${productName} ${plan.duration}`;
   const askText = `Hi, nak tanya ${productName} ${sectionName !== "ALL" ? sectionName + " " : ""}${plan.duration}`;
-  const linkText = plan.order === false ? askText : orderText;
-  const buttonLabel = stockOn ? (plan.order === false ? "Tanya Admin" : "Order") : stockText;
-  const buttonClass = stockOn
-    ? (plan.order === false ? "plan-btn plan-btn-soft" : "plan-btn")
-    : "plan-btn plan-btn-disabled";
-  const buttonHref = stockOn ? createTelegramLink(linkText) : "#";
-  const note = plan.note && !promoActive ? `<span class="plan-note">${safeText(plan.note)}</span>` : "";
+
+  let linkText = plan.order === false ? askText : orderText;
+
+  if (productName === "SOOKA PREMIUM") {
+    const availableDevices = getAvailableSookaDevices().map(device => device.label);
+    if (availableDevices.length) {
+      linkText = `${orderText} - Device available: ${availableDevices.join(", ")}`;
+    }
+  }
+
+  const buttonLabel = !productAvailable
+    ? getStockText(productName, sectionName)
+    : plan.order === false
+      ? "Tanya Admin"
+      : "Order";
+
+  const buttonClass = !productAvailable
+    ? "plan-btn plan-btn-disabled"
+    : plan.order === false
+      ? "plan-btn plan-btn-soft"
+      : "plan-btn";
+
+  const buttonHtml = !productAvailable
+    ? `<span class="${buttonClass}">${safeText(buttonLabel)}</span>`
+    : `<a class="${buttonClass}" href="${createTelegramLink(linkText)}" target="_blank" rel="noopener noreferrer">${safeText(buttonLabel)}</a>`;
 
   return `
-    <div class="plan-card ${promoActive ? "has-promo" : ""} ${stockOn ? "" : "stock-disabled"}">
-      <div>
-        <div class="plan-main">
+    <div class="plan-card ${productAvailable ? "" : "sold-out"}">
+      <div class="plan-main">
+        <div class="plan-line">
           <span class="plan-duration">${safeText(plan.duration)}</span>
-          ${note}
+          ${normalNote && !promoActive ? `<span class="plan-note">${safeText(normalNote)}</span>` : ""}
+          ${promoActive ? `<span class="promo-badge ${badgeClass}">${safeText(badgeText)}</span>` : ""}
         </div>
-        ${renderPromoInfo(promo)}
+        ${promoNote ? `<div class="promo-note-text">${safeText(promoNote)}</div>` : ""}
       </div>
+
       <div class="plan-side">
-        ${renderPrice(plan, promo)}
-        <a class="${buttonClass}" href="${buttonHref}" ${stockOn ? 'target="_blank" rel="noopener noreferrer"' : 'aria-disabled="true"'}>${safeText(buttonLabel)}</a>
+        <div class="price-wrap">
+          ${promoActive ? `<span class="old-price">${safeText(plan.price)}</span>` : ""}
+          <strong class="plan-price">${safeText(displayPrice)}</strong>
+        </div>
+        ${buttonHtml}
       </div>
     </div>
   `;
@@ -337,6 +413,7 @@ function renderPlan(plan = {}, productName = "", sectionName = "ALL") {
 
 function renderPlans(plans = [], productName = "", sectionName = "ALL") {
   if (!plans.length) return "";
+
   return `
     <div class="plans">
       ${plans.map(plan => renderPlan(plan, productName, sectionName)).join("")}
@@ -346,23 +423,19 @@ function renderPlans(plans = [], productName = "", sectionName = "ALL") {
 
 function renderSections(sections = [], productName = "") {
   if (!sections.length) return "";
+
   return `
     <div class="sub-list">
-      ${sections.map(section => {
-        const stockOn = isStockOn(productName, section.title);
-        const stockText = getStockText(productName, section.title);
-
-        return `
-          <div class="sub-block ${stockOn ? "" : "stock-off"}">
-            <div class="sub-title-wrap">
-              <span class="sub-title">${safeText(section.title)}</span>
-              <span class="sub-pill ${stockOn ? "" : "stock-pill"}">${stockOn ? "Pilihan" : safeText(stockText)}</span>
-            </div>
-            ${renderFeatures(section.features)}
-            ${renderPlans(section.plans, productName, section.title)}
+      ${sections.map(section => `
+        <div class="sub-block">
+          <div class="sub-title-wrap">
+            <span class="sub-title">${safeText(section.title)}</span>
+            <span class="sub-pill">${isProductAvailable(productName, section.title) ? "Available" : "Habis Stok"}</span>
           </div>
-        `;
-      }).join("")}
+          ${renderFeatures(section.features)}
+          ${renderPlans(section.plans, productName, section.title)}
+        </div>
+      `).join("")}
     </div>
   `;
 }
@@ -373,6 +446,7 @@ function renderProductNav() {
 
   nav.innerHTML = products.map(product => {
     const id = slugify(product.name);
+
     return `
       <button class="product-chip" type="button" data-target="${id}">
         <span>${getProductIcon(product.name)}</span>
@@ -390,14 +464,16 @@ function renderProducts() {
     const id = slugify(product.name);
     const planCount = getTotalPlans(product);
     const isFeatured = index === 0;
-    const productStockOn = product.sections
-      ? product.sections.some(section => isStockOn(product.name, section.title))
-      : isStockOn(product.name, "ALL");
-    const productBadge = productStockOn ? (product.badge || "Premium") : "Habis Stok";
+    const available = isProductAvailable(product.name, "ALL");
+
+    const productBadge = !available
+      ? "Habis Stok"
+      : product.badge || "Premium";
 
     return `
-      <article id="${id}" class="product-card ${isFeatured ? "product-featured" : ""} ${productStockOn ? "" : "stock-off"}">
+      <article id="${id}" class="product-card ${isFeatured ? "product-featured" : ""}">
         <div class="product-glow"></div>
+
         <div class="product-head">
           <div class="product-identity">
             <div class="product-icon">${getProductIcon(product.name)}</div>
@@ -410,6 +486,7 @@ function renderProducts() {
         </div>
 
         ${product.features ? renderFeatures(product.features) : ""}
+        ${product.name === "SOOKA PREMIUM" ? renderSookaDeviceBox() : ""}
         ${product.sections ? renderSections(product.sections, product.name) : ""}
         ${product.plans ? renderPlans(product.plans, product.name, "ALL") : ""}
       </article>
@@ -423,7 +500,7 @@ function renderTestimonies() {
 
   container.innerHTML = testimonies.map(item => `
     <article class="testimoni-card">
-      <img src="${safeText(item.image)}" alt="${safeText(item.title)}" loading="lazy">
+      <img src="${safeAttr(item.image)}" alt="${safeAttr(item.title)}" loading="lazy">
       <p>${safeText(item.title)}</p>
     </article>
   `).join("");
@@ -443,15 +520,55 @@ function initFooterYear() {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
 
-async function initSite() {
-  renderProductNav();
-  renderProducts();
-  renderTestimonies();
-  initProductNav();
-  initFooterYear();
+function showSyncNote(message = "") {
+  const note = document.getElementById("syncNote");
+  if (!note) return;
 
-  await loadWebsiteControl();
-  renderProducts();
+  if (!message) {
+    note.classList.remove("show");
+    note.textContent = "";
+    return;
+  }
+
+  note.textContent = message;
+  note.classList.add("show");
 }
 
-document.addEventListener("DOMContentLoaded", initSite);
+function jsonp(params) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "numoCustomerCb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+    const query = new URLSearchParams({
+      ...params,
+      callback: callbackName
+    });
+
+    const script = document.createElement("script");
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("Request timeout"));
+    }, 15000);
+
+    window[callbackName] = result => {
+      cleanup();
+      resolve(result);
+    };
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[callbackName];
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    }
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Network/API error"));
+    };
+
+    script.src = API_URL + "?" + query.toString();
+    document.body.appendChild(script);
+  });
+}

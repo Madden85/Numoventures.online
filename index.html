@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>NUMO VENTURES | Akaun Premium Murah</title>
   <meta name="description" content="Akaun premium murah, trusted seller sejak 2015, full warranty dan support aktif." />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -18,7 +20,6 @@
 
     :root {
       --bg: #030816;
-      --bg-2: #061323;
       --card: rgba(9, 22, 40, 0.72);
       --card-2: rgba(255, 255, 255, 0.06);
       --line: rgba(139, 225, 255, 0.16);
@@ -30,9 +31,8 @@
       --blue: #267dff;
       --green: #68ffb0;
       --gold: #ffd76a;
-      --orange: #ffb35f;
-      --danger: #ff6b8f;
-      --purple: #d58cff;
+      --red: #ff6b8f;
+      --purple: #d49bff;
       --shadow: 0 18px 60px rgba(0, 0, 0, 0.38);
       --radius-xl: 30px;
       --radius-lg: 22px;
@@ -75,10 +75,6 @@
 
     img {
       max-width: 100%;
-    }
-
-    .page {
-      width: 100%;
     }
 
     .topbar {
@@ -126,7 +122,7 @@
       letter-spacing: 0.4px;
     }
 
-    .brand span span {
+    .brand span {
       color: var(--soft);
       font-size: 11px;
       font-weight: 600;
@@ -176,18 +172,6 @@
       top: -75px;
       border-radius: 999px;
       background: radial-gradient(circle, rgba(76, 227, 255, 0.34), transparent 68%);
-      filter: blur(2px);
-    }
-
-    .hero-card::after {
-      content: "";
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      left: -80px;
-      bottom: -95px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(255, 215, 106, 0.25), transparent 68%);
       filter: blur(2px);
     }
 
@@ -299,12 +283,6 @@
       background: rgba(255, 255, 255, 0.07);
     }
 
-    .btn-primary:hover,
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.05);
-    }
-
     .trust-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -380,32 +358,20 @@
       line-height: 1.7;
     }
 
-    .sync-status {
-      display: inline-flex;
-      width: fit-content;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-      padding: 8px 11px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      color: var(--soft);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
+    .sync-note {
+      display: none;
+      margin-top: 10px;
+      color: #fff7d4;
+      background: rgba(255, 215, 106, 0.09);
+      border: 1px solid rgba(255, 215, 106, 0.16);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      line-height: 1.6;
     }
 
-    .sync-status.ok {
-      color: #baffd5;
-      border-color: rgba(104, 255, 176, 0.20);
-      background: rgba(104, 255, 176, 0.08);
-    }
-
-    .sync-status.error {
-      color: #ffd2dc;
-      border-color: rgba(255, 107, 143, 0.22);
-      background: rgba(255, 107, 143, 0.08);
+    .sync-note.show {
+      display: block;
     }
 
     .product-nav-wrap {
@@ -472,10 +438,6 @@
       box-shadow: var(--shadow), 0 0 38px rgba(255, 215, 106, 0.10);
     }
 
-    .product-card.stock-off {
-      border-color: rgba(255, 107, 143, 0.26);
-    }
-
     .product-glow {
       position: absolute;
       inset: 0;
@@ -488,7 +450,8 @@
     .product-head,
     .features,
     .plans,
-    .sub-list {
+    .sub-list,
+    .device-box {
       position: relative;
       z-index: 1;
     }
@@ -581,6 +544,63 @@
       font-weight: 900;
     }
 
+    .device-box {
+      display: grid;
+      gap: 10px;
+      margin: 10px 0 14px;
+      padding: 13px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .device-title {
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .device-subtitle {
+      color: var(--soft);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .device-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .device-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 32px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 900;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      white-space: nowrap;
+    }
+
+    .device-pill.on {
+      color: #05101d;
+      background: linear-gradient(135deg, var(--green), #d7ffe9);
+    }
+
+    .device-pill.off {
+      color: #ffd8e2;
+      background: rgba(255, 107, 143, 0.11);
+      border-color: rgba(255, 107, 143, 0.22);
+    }
+
+    .device-pill.missing {
+      color: var(--soft);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     .sub-list {
       display: grid;
       gap: 12px;
@@ -592,11 +612,6 @@
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.055);
       border: 1px solid rgba(255, 255, 255, 0.10);
-    }
-
-    .sub-block.stock-off {
-      border-color: rgba(255, 107, 143, 0.24);
-      background: rgba(255, 107, 143, 0.055);
     }
 
     .sub-title-wrap {
@@ -620,10 +635,6 @@
       letter-spacing: 0.8px;
     }
 
-    .sub-pill.stock-pill {
-      color: #ffd2dc;
-    }
-
     .plans {
       display: grid;
       gap: 10px;
@@ -639,22 +650,21 @@
       border: 1px solid rgba(255, 255, 255, 0.10);
     }
 
-    .plan-card.has-promo {
-      border-color: rgba(255, 215, 106, 0.22);
-      background: linear-gradient(145deg, rgba(255, 215, 106, 0.08), rgba(3, 9, 22, 0.56) 44%);
-    }
-
-    .plan-card.stock-disabled {
+    .plan-card.sold-out {
       opacity: 0.78;
-      border-color: rgba(255, 107, 143, 0.20);
     }
 
     .plan-main {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .plan-line {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      min-width: 0;
     }
 
     .plan-duration {
@@ -663,7 +673,8 @@
       font-weight: 800;
     }
 
-    .plan-note {
+    .plan-note,
+    .promo-badge {
       flex: 0 0 auto;
       padding: 5px 8px;
       border-radius: 999px;
@@ -672,67 +683,43 @@
       font-size: 10px;
       font-weight: 900;
       text-transform: uppercase;
+      width: fit-content;
     }
 
-    .promo-info {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 7px;
-      margin-top: 7px;
+    .promo-badge.gold {
+      color: #061323;
+      background: linear-gradient(135deg, var(--gold), #fff2b0);
     }
 
-    .promo-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 5px 8px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 900;
-      line-height: 1;
-      text-transform: uppercase;
-      letter-spacing: 0.35px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
+    .promo-badge.green {
+      color: #04101f;
+      background: linear-gradient(135deg, var(--green), #d7ffe9);
     }
 
-    .badge-gold {
-      color: #211300;
-      background: linear-gradient(135deg, #ffd76a, #fff4b7);
-    }
-
-    .badge-green {
-      color: #03190c;
-      background: linear-gradient(135deg, #68ffb0, #d8ffe9);
-    }
-
-    .badge-red {
-      color: #fff6f8;
-      background: linear-gradient(135deg, #ff466f, #ff8aa5);
-    }
-
-    .badge-blue {
-      color: #f8feff;
-      background: linear-gradient(135deg, #267dff, #4ce3ff);
-    }
-
-    .badge-purple,
-    .badge-pink,
-    .badge-pink-purple {
-      color: #fff7ff;
-      background: linear-gradient(135deg, #9d5cff, #ff74c8);
-    }
-
-    .badge-dark {
+    .promo-badge.red {
       color: #ffffff;
-      background: linear-gradient(135deg, #101827, #344055);
+      background: linear-gradient(135deg, #ff416c, var(--red));
     }
 
-    .promo-note {
-      color: #fff1bd;
-      font-size: 11.5px;
-      font-weight: 700;
-      line-height: 1.35;
+    .promo-badge.blue {
+      color: #04101f;
+      background: linear-gradient(135deg, var(--cyan), #89f4ff);
+    }
+
+    .promo-badge.purple {
+      color: #16051f;
+      background: linear-gradient(135deg, var(--purple), #ffc7ef);
+    }
+
+    .promo-badge.dark {
+      color: #ffffff;
+      background: linear-gradient(135deg, #182235, #313d56);
+    }
+
+    .promo-note-text {
+      color: #ccefff;
+      font-size: 12px;
+      line-height: 1.55;
     }
 
     .plan-side {
@@ -745,7 +732,6 @@
     .price-wrap {
       display: grid;
       gap: 2px;
-      min-width: 70px;
     }
 
     .plan-price {
@@ -756,20 +742,11 @@
       white-space: nowrap;
     }
 
-    .plan-price.old-price {
-      color: rgba(184, 208, 223, 0.78);
+    .old-price {
+      color: var(--soft);
       font-size: 12px;
+      font-weight: 800;
       text-decoration: line-through;
-      text-decoration-thickness: 2px;
-      text-shadow: none;
-    }
-
-    .promo-price {
-      color: var(--green);
-      font-size: 19px;
-      font-weight: 900;
-      white-space: nowrap;
-      text-shadow: 0 0 18px rgba(104, 255, 176, 0.18);
     }
 
     .plan-btn {
@@ -796,9 +773,8 @@
     }
 
     .plan-btn-disabled {
-      cursor: not-allowed;
-      color: #ffc9d5;
-      background: rgba(255, 107, 143, 0.10);
+      color: #ffccda;
+      background: rgba(255, 107, 143, 0.12);
       border: 1px solid rgba(255, 107, 143, 0.22);
       box-shadow: none;
       pointer-events: none;
@@ -1131,6 +1107,7 @@
                   <span>Pilih produk, tekan button order dan terus masuk Telegram admin.</span>
                 </div>
               </div>
+
               <div class="trust-card">
                 <div class="trust-icon">🛡️</div>
                 <div>
@@ -1138,6 +1115,7 @@
                   <span>Jika ada masalah, admin akan bantu fix atau ganti akaun.</span>
                 </div>
               </div>
+
               <div class="trust-card">
                 <div class="trust-icon">✅</div>
                 <div>
@@ -1155,9 +1133,9 @@
           <p class="section-label">Premium Store</p>
           <h2 class="section-title">Senarai Produk</h2>
           <p class="section-subtitle">
-            Ada pelbagai pilihan langganan. Pilih pakej langganan yang awak nak.
+            Pilih pakej langganan yang awak nak. Status stok dan promo akan sync dari sistem admin NUMO VENTURES.
           </p>
-          <div id="syncStatus" class="sync-status">⏳ Semak stok & promo...</div>
+          <div id="syncNote" class="sync-note"></div>
         </div>
 
         <div class="product-nav-wrap">
@@ -1171,20 +1149,22 @@
         <div class="section-head">
           <p class="section-label">Cara Order</p>
           <h2 class="section-title">3 langkah mudah</h2>
-          <p class="section-subtitle">3 langkah mudah untuk melanggan dengan kami</p>
+          <p class="section-subtitle">Website ni fokus untuk customer phone. Semua button order terus bawa ke Telegram admin.</p>
         </div>
 
         <div class="steps">
           <div class="step-card">
             <div class="step-no">1</div>
             <strong>Pilih produk</strong>
-            <p>Pilih senarai produk dan pilih pakej langganan yang sesuai.</p>
+            <p>Scroll senarai produk dan pilih pakej langganan yang sesuai.</p>
           </div>
+
           <div class="step-card">
             <div class="step-no">2</div>
             <strong>Tekan order</strong>
-            <p>Tekan button order dan terus ke Telegram admin</p>
+            <p>Button order akan terus buka Telegram dengan mesej produk siap-siap.</p>
           </div>
+
           <div class="step-card">
             <div class="step-no">3</div>
             <strong>Admin proses</strong>
@@ -1198,7 +1178,7 @@
           <p class="section-label">Bukti Customer</p>
           <h2 class="section-title">Testimoni Pelanggan</h2>
           <p class="section-subtitle">
-            Ramai pelanggan berpuas hati dan repeat order dengan NUMO VENTURES.
+            Bukti pelanggan berpuas hati dan ramai yang repeat order dengan NUMO VENTURES.
           </p>
         </div>
 

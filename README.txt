@@ -1,29 +1,36 @@
-NUMO VENTURES - STEP 3 CUSTOMER WEBSITE
+NUMO CUSTOMER WEBSITE V4 - SOOKA DEVICE DISPLAY
 
-Fail dalam folder/zip:
+Fail dalam zip:
 - index.html
 - app.js
+- README.txt
 
 Apa yang baru:
-- Website customer Design 1 dikekalkan.
-- app.js sudah disambungkan kepada Apps Script Web App:
-  https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec
-- Website akan baca STOCK_CONTROL dan PROMO_CONTROL.
-- Stok OFF akan jadikan button Habis Stok.
-- YouTube Email Sendiri dan Email Seller boleh OFF asing-asing.
-- Promo ikut setiap plan/harga.
-- Promo badge, custom badge text, badge color dan note akan ikut Google Sheet/Admin Panel nanti.
+1. Website customer akan paparkan device Sooka:
+   - TV
+   - Phone
+   - Tablet
+2. Kalau device ON, dia keluar "Available".
+3. Kalau device OFF, dia keluar "Habis".
+4. Kalau semua device OFF, semua button plan Sooka jadi "Habis Stok".
+5. Kalau ada sekurang-kurangnya satu device ON, plan Sooka masih boleh order.
+6. Bila customer tekan order Sooka, mesej Telegram akan include device yang available.
+
+Syarat Google Sheet:
+Tab STOCK_CONTROL mesti ada row:
+SOOKA PREMIUM,TV,ON,Habis Stok,
+SOOKA PREMIUM,PHONE,ON,Habis Stok,
+SOOKA PREMIUM,TABLET,ON,Habis Stok,
 
 Cara guna:
-1. Backup website lama dulu.
-2. Replace index.html dan app.js lama dengan fail baru ini.
-3. Pastikan asset/gambar lama masih dalam folder sama:
+1. Backup website customer lama.
+2. Upload/replace index.html dan app.js website customer dengan file dalam zip ini.
+3. Pastikan gambar lama masih dalam folder yang sama:
    - Numologo.jpg
    - bg-premium.jpg
    - testimoni1.jpg hingga testimoni10.jpg
-4. Upload semula ke hosting.
-5. Test website.
+4. Refresh website customer.
+5. Check bahagian SOOKA PREMIUM.
 
-Nota:
-- Kalau sync Apps Script gagal, website tetap tunjuk harga asal.
-- Step seterusnya ialah admin panel: admin.html dan admin.js.
+Link Apps Script yang digunakan:
+https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec
