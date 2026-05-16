@@ -21,8 +21,6 @@ let editableContent = {
   heroCardText: "Netflix, YouTube, Disney, Sooka, Viu, iQiyi dan Spotify dalam satu tempat.",
   productSectionTitle: "Produk Premium",
   productSectionSubtitle: "Pilih produk yang anda berminat.",
-  testimoniTitle: "Testimoni Customer",
-  testimoniSubtitle: "Antara bukti customer yang pernah order dengan NUMO VENTURES.",
   footerTitle: "Nak order sekarang?",
   footerText: "Tekan button di bawah dan terus chat dengan admin Telegram NUMO VENTURES.",
   footerBtn: "Chat Admin Sekarang",
@@ -107,10 +105,6 @@ const products = [
   ]}
 ];
 
-const testimonies = Array.from({ length: 10 }, (_, index) => ({
-  title: `Testimoni ${index + 1}`,
-  image: `testimoni${index + 1}.jpg`
-}));
 
 const sookaDevices = [
   { key: "TV", label: "TV" },
@@ -133,7 +127,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderCategoryButtons();
   renderTrustCards();
   renderSteps();
-  renderTestimonies();
   renderProducts();
   await loadWebsiteControl();
   renderProducts();
@@ -170,7 +163,7 @@ async function loadEditableContent() {
 
 function applyEditableContent() {
   document.title = editableContent.brandName + " | Premium Account Store";
-  ["brandName","brandTagline","topbarCta","heroBadge","heroTitle","heroDesc","heroPrimaryBtn","heroSecondaryBtn","heroEmoji","heroCardTitle","heroCardText","productSectionTitle","productSectionSubtitle","testimoniTitle","testimoniSubtitle","footerTitle","footerText","footerBtn","stickyTitle","stickyText","stickyBtn","copyrightText"].forEach(id => setText(id, editableContent[id]));
+  ["brandName","brandTagline","topbarCta","heroBadge","heroTitle","heroDesc","heroPrimaryBtn","heroSecondaryBtn","heroEmoji","heroCardTitle","heroCardText","productSectionTitle","productSectionSubtitle","footerTitle","footerText","footerBtn","stickyTitle","stickyText","stickyBtn","copyrightText"].forEach(id => setText(id, editableContent[id]));
   setImage("brandLogo", editableContent.logo);
   setLink("topbarCta", createTelegramLink("Hi nak order"));
   setLink("heroSecondaryBtn", createTelegramLink("Hi nak order"));
@@ -249,22 +242,6 @@ function renderSteps() {
   `).join("");
 }
 
-function renderTestimonies() {
-  const grid = document.getElementById("testimoniGrid");
-  const count = document.getElementById("testimoniCount");
-
-  if (!grid) return;
-
-  if (count) count.textContent = `${testimonies.length} gambar`;
-
-  grid.innerHTML = testimonies.map(item => `
-    <article class="testimoni-card">
-      <img src="${safeAttr(item.image)}" alt="${safeAttr(item.title)}" loading="lazy">
-      <p>${safeText(item.title)}</p>
-    </article>
-  `).join("");
-}
-
 function renderProducts() {
   const keyword = searchInput.value.toLowerCase().trim();
   const filteredProducts = products.filter(product => {
@@ -280,23 +257,98 @@ function renderProducts() {
   }
   emptyBox.style.display = "none";
   productsGrid.innerHTML = filteredProducts.map(product => renderProductCard(product)).join("");
+  attachProductToggles();
 }
 function renderProductCard(product) {
   const available = isProductAvailable(product.name, "ALL");
   const badgeText = available ? product.badge : "Habis Stok";
   const badgeClass = available ? "" : "sold";
+  const lowestPrice = getLowestDisplayPrice(product);
+  const detailsHtml = product.sections
+    ? renderProductSections(product)
+    : renderPlans(product.plans, product.name, "ALL");
+
   return `
-    <div class="product-card">
-      <div class="product-img" style="background: ${product.color};"><span class="badge ${badgeClass}">${safeText(badgeText)}</span><img class="product-photo" src="${safeAttr(product.image || "")}" alt="${safeAttr(product.name)}" loading="lazy" onerror="this.closest('.product-img').classList.add('image-failed')"><span class="product-emoji-fallback">${safeText(product.emoji)}</span></div>
+    <div class="product-card" data-product="${safeAttr(product.name)}">
+      <div class="product-img product-toggle-area" style="background: ${product.color};" role="button" tabindex="0" aria-label="Lihat pakej ${safeAttr(product.name)}">
+        <span class="badge ${badgeClass}">${safeText(badgeText)}</span>
+        <img
+          class="product-photo"
+          src="${safeAttr(product.image || "")}" 
+          alt="${safeAttr(product.name)}" 
+          loading="lazy" 
+          onerror="this.closest('.product-img').classList.add('image-failed')"
+        >
+        <span class="product-emoji-fallback">${safeText(product.emoji)}</span>
+      </div>
+
       <div class="product-info">
         <div class="product-category">${safeText(product.category)}</div>
         <div class="product-name">${safeText(product.name)}</div>
         <div class="product-desc">${safeText(product.desc)}</div>
-        ${product.name === "SOOKA PREMIUM" ? renderSookaDeviceBox() : ""}
-        ${product.sections ? renderProductSections(product) : renderPlans(product.plans, product.name, "ALL")}
+
+        <div class="product-summary-row">
+          <span class="summary-price">${safeText(lowestPrice)}</span>
+          <span class="stock ${available ? "" : "off"}">${available ? "Ready" : getStockText(product.name, "ALL")}</span>
+        </div>
+        <div class="summary-helper">Tekan produk atau button bawah untuk lihat semua pakej.</div>
+
+        <button class="view-btn product-toggle" type="button">Lihat Pakej</button>
+
+        <div class="product-details">
+          ${product.name === "SOOKA PREMIUM" ? renderSookaDeviceBox() : ""}
+          ${detailsHtml}
+        </div>
       </div>
     </div>`;
 }
+
+function attachProductToggles() {
+  document.querySelectorAll(".product-card").forEach(card => {
+    const toggleTargets = card.querySelectorAll(".product-toggle, .product-toggle-area");
+    const button = card.querySelector(".view-btn");
+
+    toggleTargets.forEach(target => {
+      target.addEventListener("click", () => toggleProductCard(card, button));
+      target.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleProductCard(card, button);
+        }
+      });
+    });
+  });
+}
+
+function toggleProductCard(card, button) {
+  const isOpen = card.classList.toggle("open");
+  if (button) button.textContent = isOpen ? "Tutup Pakej" : "Lihat Pakej";
+}
+
+function getLowestDisplayPrice(product) {
+  const plans = [];
+
+  if (product.sections) {
+    product.sections.forEach(section => {
+      (section.plans || []).forEach(plan => plans.push({ ...plan, section: section.title }));
+    });
+  } else {
+    (product.plans || []).forEach(plan => plans.push({ ...plan, section: "ALL" }));
+  }
+
+  const prices = plans.map(plan => {
+    const promo = getPromo(product.name, plan.section, plan.duration);
+    const price = isPromoActive(promo) && promo.promoPrice ? promo.promoPrice : plan.price;
+    const number = Number(String(price).replace(/[^0-9.]/g, ""));
+    return Number.isFinite(number) ? { text: price, number } : null;
+  }).filter(Boolean);
+
+  if (!prices.length) return "Lihat Harga";
+
+  prices.sort((a, b) => a.number - b.number);
+  return `Dari ${prices[0].text}`;
+}
+
 function renderProductSections(product) {
   return `<div class="section-list">${product.sections.map(section => {
     const available = isStockOn(product.name, section.title);
