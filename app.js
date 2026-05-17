@@ -45,10 +45,10 @@ const products = [
   { name: "NETFLIX PREMIUM",
     image: "netflix.jpg", category: "Streaming", desc: "Private profile, boleh set nama sendiri dan pincode.", emoji: "🎬", badge: "Best Seller", color: "linear-gradient(135deg, #fee2e2, #ef4444)", plans: [
     { duration: "1 Bulan", price: "RM25", orderText: "Netflix 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM50", orderText: "Netflix 2 bulan", order: true },
-    { duration: "3 Bulan Promo", price: "RM75", orderText: "Netflix 3 bulan", note: "Promo", order: true },
-    { duration: "6 Bulan", price: "RM150", order: false },
-    { duration: "12 Bulan", price: "RM300", order: false }
+    { duration: "2 Bulan", price: "RM45", orderText: "Netflix 2 bulan", order: true },
+    { duration: "3 Bulan Promo", price: "RM65", orderText: "Netflix 3 bulan", note: "Promo", order: true },
+    { duration: "6 Bulan", price: "RM120", order: false },
+    { duration: "12 Bulan", price: "RM230", order: false }
   ]},
   { name: "YOUTUBE PREMIUM",
     image: "youtube.jpg", category: "Streaming", desc: "Pilihan Email Sendiri atau Email Seller.", emoji: "▶️", badge: "Hot Deal", color: "linear-gradient(135deg, #fee2e2, #f87171)", sections: [
@@ -114,6 +114,67 @@ const sookaDevices = [
 
 let websiteControl = { stock: [], promos: [], meta: {}, loaded: false };
 
+/***********************
+ * TEXT BUTTON / LABEL CONFIG
+ * App.js akan auto-load app2.js.
+ * Kalau app2.js tak jumpa, default text bawah akan digunakan.
+ ***********************/
+let uiText = {
+  categoryAll: "Semua",
+  searchPlaceholder: "Cari produk... contoh: Netflix, YouTube, Sooka",
+  syncing: "Syncing...",
+  liveStockPromo: "Live stock & promo",
+  offlinePriceMode: "Offline price mode",
+  productCountSuffix: "produk",
+  emptySearchText: "Tiada produk dijumpai. Cuba cari nama atau kategori lain.",
+  readyLabel: "Ready",
+  soldOutLabel: "Habis Stok",
+  viewPackages: "Lihat Pakej",
+  closePackages: "Tutup Pakej",
+  summaryHelper: "Tekan produk atau button bawah untuk lihat semua pakej.",
+  askAdmin: "Tanya Admin",
+  order: "Order",
+  deviceAvailableTitle: "Device Available"
+};
+
+function loadUiTextFile() {
+  return new Promise(resolve => {
+    const script = document.createElement("script");
+    script.src = `app2.js?_=${Date.now()}`;
+
+    script.onload = () => {
+      if (window.NUMO_BUTTON_TEXT && typeof window.NUMO_BUTTON_TEXT === "object") {
+        uiText = { ...uiText, ...window.NUMO_BUTTON_TEXT };
+      }
+      resolve();
+    };
+
+    script.onerror = () => {
+      console.warn("app2.js not found. Using default button text.");
+      resolve();
+    };
+
+    document.head.appendChild(script);
+  });
+}
+
+function getUiText(key) {
+  return uiText[key] ?? "";
+}
+
+function applyUiText() {
+  const search = document.getElementById("searchInput");
+  if (search) search.placeholder = getUiText("searchPlaceholder");
+
+  const empty = document.getElementById("emptyBox");
+  if (empty) empty.textContent = getUiText("emptySearchText");
+
+  if (selectedCategory === "Semua") {
+    selectedCategory = getUiText("categoryAll");
+  }
+}
+
+
 const productsGrid = document.getElementById("productsGrid");
 const productCount = document.getElementById("productCount");
 const emptyBox = document.getElementById("emptyBox");
@@ -122,13 +183,19 @@ const categoryButtons = document.getElementById("categoryButtons");
 const syncStatus = document.getElementById("syncStatus");
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await loadUiTextFile();
+  applyUiText();
+
   await loadEditableContent();
   applyEditableContent();
+
   renderCategoryButtons();
   renderTrustCards();
   renderSteps();
   renderProducts();
+
   await loadWebsiteControl();
+
   renderProducts();
   renderCategoryButtons();
 });
@@ -172,7 +239,7 @@ function applyEditableContent() {
 }
 
 async function loadWebsiteControl() {
-  setSyncStatus("Syncing...", "warn");
+  setSyncStatus(getUiText("syncing"), "warn");
   try {
     const result = await jsonp({ mode: "getWebsiteControl", _: Date.now() });
     if (!result.ok) throw new Error(result.error || "Gagal load website control.");
@@ -182,10 +249,10 @@ async function loadWebsiteControl() {
       meta: result.data?.meta || {},
       loaded: true
     };
-    setSyncStatus("Live stock & promo", "ok");
+    setSyncStatus(getUiText("liveStockPromo"), "ok");
   } catch (error) {
     websiteControl.loaded = false;
-    setSyncStatus("Offline price mode", "warn");
+    setSyncStatus(getUiText("offlinePriceMode"), "warn");
   }
 }
 
@@ -216,7 +283,7 @@ function safeAttr(value = "") { return safeText(value); }
 function normalize(value = "") { return String(value || "").trim().toUpperCase(); }
 
 function getCategories() {
-  return ["Semua", ...new Set(products.map(product => product.category))];
+  return [getUiText("categoryAll"), ...new Set(products.map(product => product.category))];
 }
 function renderCategoryButtons() {
   categoryButtons.innerHTML = getCategories().map(category => {
@@ -245,11 +312,11 @@ function renderSteps() {
 function renderProducts() {
   const keyword = searchInput.value.toLowerCase().trim();
   const filteredProducts = products.filter(product => {
-    const matchCategory = selectedCategory === "Semua" || product.category === selectedCategory;
+    const matchCategory = selectedCategory === getUiText("categoryAll") || product.category === selectedCategory;
     const matchKeyword = product.name.toLowerCase().includes(keyword) || product.category.toLowerCase().includes(keyword) || product.desc.toLowerCase().includes(keyword);
     return matchCategory && matchKeyword;
   });
-  productCount.textContent = `${filteredProducts.length} produk`;
+  productCount.textContent = `${filteredProducts.length} ${getUiText("productCountSuffix")}`;
   if (filteredProducts.length === 0) {
     productsGrid.innerHTML = "";
     emptyBox.style.display = "block";
@@ -289,11 +356,11 @@ function renderProductCard(product) {
 
         <div class="product-summary-row">
           <span class="summary-price">${safeText(lowestPrice)}</span>
-          <span class="stock ${available ? "" : "off"}">${available ? "Ready" : getStockText(product.name, "ALL")}</span>
+          <span class="stock ${available ? "" : "off"}">${available ? getUiText("readyLabel") : getStockText(product.name, "ALL")}</span>
         </div>
-        <div class="summary-helper">Tekan produk atau button bawah untuk lihat semua pakej.</div>
+        <div class="summary-helper">${safeText(getUiText("summaryHelper"))}</div>
 
-        <button class="view-btn product-toggle" type="button">Lihat Pakej</button>
+        <button class="view-btn product-toggle" type="button">${safeText(getUiText("viewPackages"))}</button>
 
         <div class="product-details">
           ${product.name === "SOOKA PREMIUM" ? renderSookaDeviceBox() : ""}
@@ -322,7 +389,7 @@ function attachProductToggles() {
 
 function toggleProductCard(card, button) {
   const isOpen = card.classList.toggle("open");
-  if (button) button.textContent = isOpen ? "Tutup Pakej" : "Lihat Pakej";
+  if (button) button.textContent = isOpen ? getUiText("closePackages") : getUiText("viewPackages");
 }
 
 function getLowestDisplayPrice(product) {
@@ -352,7 +419,7 @@ function getLowestDisplayPrice(product) {
 function renderProductSections(product) {
   return `<div class="section-list">${product.sections.map(section => {
     const available = isStockOn(product.name, section.title);
-    return `<div class="section-block"><div class="section-block-title"><span>${safeText(section.title)}</span><span class="mini-stock ${available ? "" : "off"}">${available ? "Ready" : getStockText(product.name, section.title)}</span></div>${renderPlans(section.plans, product.name, section.title)}</div>`;
+    return `<div class="section-block"><div class="section-block-title"><span>${safeText(section.title)}</span><span class="mini-stock ${available ? "" : "off"}">${available ? getUiText("readyLabel") : getStockText(product.name, section.title)}</span></div>${renderPlans(section.plans, product.name, section.title)}</div>`;
   }).join("")}</div>`;
 }
 function renderPlans(plans = [], productName = "", sectionName = "ALL") {
@@ -374,14 +441,14 @@ function renderPlan(plan, productName, sectionName) {
     const availableDevices = getAvailableSookaDevices().map(device => device.label);
     if (availableDevices.length) linkText = `${orderText} - Device available: ${availableDevices.join(", ")}`;
   }
-  const buttonLabel = !available ? getStockText(productName, sectionName) : plan.order === false ? "Tanya Admin" : "Order";
+  const buttonLabel = !available ? getStockText(productName, sectionName) : plan.order === false ? getUiText("askAdmin") : getUiText("order");
   const buttonClass = !available ? "order-btn disabled" : plan.order === false ? "order-btn ask" : "order-btn";
   const buttonHtml = !available ? `<span class="${buttonClass}">${safeText(buttonLabel)}</span>` : `<a class="${buttonClass}" href="${createTelegramLink(linkText)}" target="_blank" rel="noopener noreferrer">${safeText(buttonLabel)}</a>`;
-  return `<div class="plan-card ${available ? "" : "sold-out"}"><div class="plan-top"><div><div class="plan-name">${safeText(plan.duration)}</div>${promoNote ? `<div class="plan-note">${safeText(promoNote)}</div>` : ""}${normalNote && !promoActive ? `<div class="plan-note">${safeText(normalNote)}</div>` : ""}</div>${promoActive ? `<span class="promo-badge ${badgeClass}">${safeText(badgeText)}</span>` : ""}</div><div class="price-row"><div><span class="price">${safeText(displayPrice)}</span>${promoActive ? `<span class="old-price">${safeText(plan.price)}</span>` : ""}</div><span class="stock ${available ? "" : "off"}">${available ? "Ready" : getStockText(productName, sectionName)}</span></div>${buttonHtml}</div>`;
+  return `<div class="plan-card ${available ? "" : "sold-out"}"><div class="plan-top"><div><div class="plan-name">${safeText(plan.duration)}</div>${promoNote ? `<div class="plan-note">${safeText(promoNote)}</div>` : ""}${normalNote && !promoActive ? `<div class="plan-note">${safeText(normalNote)}</div>` : ""}</div>${promoActive ? `<span class="promo-badge ${badgeClass}">${safeText(badgeText)}</span>` : ""}</div><div class="price-row"><div><span class="price">${safeText(displayPrice)}</span>${promoActive ? `<span class="old-price">${safeText(plan.price)}</span>` : ""}</div><span class="stock ${available ? "" : "off"}">${available ? getUiText("readyLabel") : getStockText(productName, sectionName)}</span></div>${buttonHtml}</div>`;
 }
 function renderSookaDeviceBox() {
   const devices = getSookaDeviceStates();
-  return `<div class="device-box"><div class="device-title">Device Available</div><div class="device-row">${devices.map(device => {
+  return `<div class="device-box"><div class="device-title">${safeText(getUiText("deviceAvailableTitle"))}</div><div class="device-row">${devices.map(device => {
     const cls = device.status === "ON" ? "on" : "off";
     const icon = device.status === "ON" ? "✅" : "❌";
     return `<span class="device-pill ${cls}">${safeText(device.label)} ${icon}</span>`;
@@ -397,7 +464,7 @@ function isStockOn(product, section = "ALL") {
 }
 function getStockText(product, section = "ALL") {
   const stock = getStock(product, section);
-  return stock?.stockText || "Habis Stok";
+  return stock?.stockText || getUiText("soldOutLabel");
 }
 function getSookaDeviceStates() {
   const deviceRows = sookaDevices.map(device => {
@@ -456,4 +523,4 @@ function jsonp(params) {
     document.body.appendChild(script);
   });
 }
-searchInput.addEventListener("input", renderProducts);
+if (searchInput) searchInput.addEventListener("input", renderProducts);
