@@ -1,4 +1,4 @@
-NUMO CUSTOMER WEBSITE V6 - SIMPLE STORE LAYOUT
+NUMO CUSTOMER WEBSITE V6.4 FIXED
 
 Fail dalam zip:
 - index.html
@@ -6,74 +6,47 @@ Fail dalam zip:
 - app.js
 - README.txt
 
-Design:
-- Style simple macam contoh kasut yang diberi.
-- Header gelap, panel search, category button, grid produk dan card putih.
-- Tak ada cart. Button order terus ke Telegram.
-- Masih connect dengan Apps Script / Google Sheet untuk:
-  - stock product
-  - YouTube Email Sendiri / Email Seller
-  - Sooka TV / Phone / Tablet
-  - promo price
-  - promo badge
-  - badge color
-  - promo note
+Apa yang dibetulkan:
+1. app.js disusun semula supaya match dengan index.html.
+2. Error JavaScript extra bracket sudah dibetulkan.
+3. Bahagian testimoni dibuang.
+4. Produk tunjuk ringkasan sahaja dahulu.
+5. Customer tekan gambar produk atau button "Lihat Pakej" baru keluar detail pakej/harga.
+6. Button akan tukar kepada "Tutup Pakej" bila detail dibuka.
+7. Product image digunakan:
+   netflix.jpg
+   youtube.jpg
+   disney.jpg
+   sooka.jpg
+   viu.jpg
+   iqiyi.jpg
+   spotify.jpg
+8. Kalau gambar gagal load, fallback kepada emoji.
+9. Harga Netflix 3 Bulan Promo dikekalkan RM65.
+10. Promo, stock, YouTube Email Sendiri/Seller, dan Sooka device masih ikut admin panel / Google Sheet.
+11. index2.html kekal untuk edit ayat sahaja.
 
 Cara guna:
-1. Backup customer website lama.
+1. Backup website customer lama.
 2. Upload/replace:
    index.html
    index2.html
    app.js
-3. Pastikan gambar logo masih ada:
+3. Pastikan gambar ini ada dalam folder yang sama:
    Numologo.jpg
+   netflix.jpg
+   youtube.jpg
+   disney.jpg
+   sooka.jpg
+   viu.jpg
+   iqiyi.jpg
+   spotify.jpg
 4. Refresh website.
 
 Cara edit ayat:
-- Buka index2.html sahaja.
-- Edit text antara tag.
-- Jangan ubah data-key="" atau id="".
+- Edit index2.html sahaja.
+- Jangan ubah id="" atau data-key="".
 
-Contoh:
-<p data-key="heroTitle">Akaun premium murah, trusted &amp; full warranty.</p>
-
-Boleh tukar kepada:
-<p data-key="heroTitle">Premium account murah, laju dan trusted.</p>
-
-Jangan ubah:
-data-key="heroTitle"
-
-Nota:
-- Harga produk ada dalam app.js.
-- Promo/stok akan override ikut admin panel Google Sheet.
-- Kalau Apps Script gagal sync, website masih tunjuk harga asal.
-
-
-UPDATE V6.1 - TESTIMONI DITAMBAH BALIK
-- Bahagian Testimoni Customer sudah ditambah antara Produk dan Cara Order.
-- Website akan cari gambar:
-  testimoni1.jpg hingga testimoni10.jpg
-- Pastikan gambar testimoni tersebut ada dalam folder yang sama dengan index.html.
-- Ayat title/subtitle testimoni boleh edit dalam index2.html:
-  data-key="testimoniTitle"
-  data-key="testimoniSubtitle"
-
-
-UPDATE V6.2 - PRODUCT IMAGE
-- Product card sekarang guna gambar:
-  netflix.jpg
-  youtube.jpg
-  disney.jpg
-  sooka.jpg
-  viu.jpg
-  iqiyi.jpg
-  spotify.jpg
-
-- Pastikan semua gambar ini berada dalam folder yang sama dengan:
-  index.html
-  index2.html
-  app.js
-
-- Kalau gambar gagal load, website akan fallback kepada emoji.
-- Saiz gambar recommended: 1200 x 800 px.
-- Format: JPG/WEBP, bawah 200KB kalau boleh.
+Apps Script:
+- Masih guna API sedia ada.
+- Tak perlu tukar Apps Script.
