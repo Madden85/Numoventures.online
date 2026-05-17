@@ -30,7 +30,7 @@ window.NUMO_BUTTON_TEXT = {
   summaryHelper: "Tekan produk atau button bawah untuk lihat semua pakej.",
 
   // Order buttons
-  order: "Order",
+  order: "Dapatkan Akaun",
   askAdmin: "Tanya Admin",
 
   // Sooka device title
