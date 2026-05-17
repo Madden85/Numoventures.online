@@ -45,7 +45,7 @@ const products = [
   { name: "NETFLIX PREMIUM",
     image: "netflix.jpg", category: "Streaming", desc: "Private profile, boleh set nama sendiri dan pincode.", emoji: "🎬", badge: "Best Seller", color: "linear-gradient(135deg, #fee2e2, #ef4444)", plans: [
     { duration: "1 Bulan", price: "RM25", orderText: "Netflix 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM45", orderText: "Netflix 2 bulan", order: true },
+    { duration: "2 Bulan", price: "RM50", orderText: "Netflix 2 bulan", order: true },
     { duration: "3 Bulan Promo", price: "RM65", orderText: "Netflix 3 bulan", note: "Promo", order: true },
     { duration: "6 Bulan", price: "RM120", order: false },
     { duration: "12 Bulan", price: "RM230", order: false }
