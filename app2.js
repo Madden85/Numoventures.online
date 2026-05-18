@@ -17,7 +17,7 @@ window.NUMO_BUTTON_TEXT = {
 
   // Sync status
   syncing: "Syncing...",
-  liveStockPromo: "Live stock & promo",
+  liveStockPromo: "Terus dapat akaun lepas payment",
   offlinePriceMode: "Offline price mode",
 
   // Stock labels
