@@ -1,526 +1,58 @@
 /***********************
- * NUMO CUSTOMER WEBSITE V6.4 FIXED
- * Simple store layout + click product details
+ * NUMO CUSTOMER WEBSITE STEP 4 V7.0
+ * Hot Selling + Auto Assign Reseller + 5-min Reassign
  ***********************/
-
 const API_URL = "https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec";
-let telegramUsername = "ownernumoventures";
-let selectedCategory = "Semua";
-
-let editableContent = {
-  brandName: "NUMO VENTURES",
-  brandTagline: "Trusted Since 2015",
-  topbarCta: "Order Sekarang",
-  heroBadge: "PROMO PREMIUM TERKINI",
-  heroTitle: "Akaun premium murah, trusted & full warranty.",
-  heroDesc: "Pilih produk pilihan anda, tekan order, dan terus chat admin Telegram.",
-  heroPrimaryBtn: "Lihat Produk",
-  heroSecondaryBtn: "Chat Admin",
-  heroEmoji: "⭐",
-  heroCardTitle: "Premium Account",
-  heroCardText: "Netflix, YouTube, Disney, Sooka, Viu, iQiyi dan Spotify dalam satu tempat.",
-  productSectionTitle: "Produk Premium",
-  productSectionSubtitle: "Pilih produk yang anda berminat.",
-  footerTitle: "Nak order sekarang?",
-  footerText: "Tekan button di bawah dan terus chat dengan admin Telegram NUMO VENTURES.",
-  footerBtn: "Chat Admin Sekarang",
-  stickyTitle: "Nak order sekarang?",
-  stickyText: "Terus chat admin Telegram",
-  stickyBtn: "Order",
-  copyrightText: "© 2026 NUMO VENTURES. Semua hak cipta terpelihara.",
-  logo: "Numologo.jpg",
-  trustCards: [
-    { title: "Trusted Since 2015", text: "Seller dipercayai, support aktif dan ramai customer repeat order." },
-    { title: "Full Warranty", text: "Jika ada masalah sepanjang tempoh langganan, admin akan bantu." },
-    { title: "Fast Response", text: "Tekan order dan terus chat dengan admin melalui Telegram." }
-  ],
-  orderSteps: [
-    { title: "Pilih produk", text: "Cari produk yang anda nak dan pilih plan yang sesuai." },
-    { title: "Tekan order", text: "Button order akan terus buka Telegram dengan mesej siap-siap." },
-    { title: "Admin proses", text: "Admin akan confirm bayaran dan bagi detail akaun anda." }
-  ]
-};
-
-const products = [
-  { name: "NETFLIX PREMIUM",
-    image: "netflix.jpg", category: "Streaming", desc: "Private profile, boleh set nama sendiri dan pincode.", emoji: "🎬", badge: "Best Seller", color: "linear-gradient(135deg, #fee2e2, #ef4444)", plans: [
-    { duration: "1 Bulan", price: "RM25", orderText: "Netflix 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM50", orderText: "Netflix 2 bulan", order: true },
-    { duration: "3 Bulan Promo", price: "RM75", orderText: "Netflix 3 bulan", note: "Promo", order: true },
-    { duration: "6 Bulan", price: "RM150", order: false },
-    { duration: "12 Bulan", price: "RM300", order: false }
-  ]},
-  { name: "YOUTUBE PREMIUM",
-    image: "youtube.jpg", category: "Streaming", desc: "Pilihan Email Sendiri atau Email Seller.", emoji: "▶️", badge: "Hot Deal", color: "linear-gradient(135deg, #fee2e2, #f87171)", sections: [
-    { title: "Email Sendiri", plans: [
-      { duration: "1 Bulan", price: "RM16", orderText: "YT Sendiri 1 bulan", order: true },
-      { duration: "3 Bulan", price: "RM45", orderText: "YT Sendiri 3 bulan", order: true },
-      { duration: "6 Bulan", price: "RM85", order: false },
-      { duration: "12 Bulan", price: "RM144", order: false }
-    ]},
-    { title: "Email Seller", plans: [
-      { duration: "1 Bulan", price: "RM10", orderText: "YT Seller 1 bulan", order: true },
-      { duration: "3 Bulan", price: "RM27", orderText: "YT Seller 3 bulan", order: true },
-      { duration: "6 Bulan", price: "RM48", order: false },
-      { duration: "12 Bulan", price: "RM84", order: false }
-    ]}
-  ]},
-  { name: "DISNEY+ HOTSTAR",
-    image: "disney.jpg", category: "Streaming", desc: "Akaun Disney+ Hotstar premium dengan warranty.", emoji: "🏰", badge: "Premium", color: "linear-gradient(135deg, #dbeafe, #2563eb)", plans: [
-    { duration: "1 Bulan", price: "RM25", orderText: "Disney 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM45", orderText: "Disney 2 bulan", order: true },
-    { duration: "Promo 3 Bulan", price: "RM60", orderText: "Disney 3 bulan", order: true },
-    { duration: "6 Bulan", price: "RM120", order: false },
-    { duration: "12 Bulan", price: "RM230", order: false }
-  ]},
-  { name: "SOOKA PREMIUM",
-    image: "sooka.jpg", category: "Streaming", desc: "Sooka premium dengan pilihan device TV, Phone atau Tablet.", emoji: "📡", badge: "Device", color: "linear-gradient(135deg, #dcfce7, #22c55e)", plans: [
-    { duration: "1 Bulan", price: "RM25", orderText: "Sooka 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM46", orderText: "Sooka 2 bulan", order: true },
-    { duration: "6 Bulan", price: "RM120", order: false },
-    { duration: "12 Bulan", price: "RM216", order: false }
-  ]},
-  { name: "VIU PREMIUM",
-    image: "viu.jpg", category: "Streaming", desc: "Viu premium untuk drama, movie dan entertainment.", emoji: "📱", badge: "Value", color: "linear-gradient(135deg, #fef3c7, #f59e0b)", plans: [
-    { duration: "1 Bulan", price: "RM15", orderText: "Viu 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM26", orderText: "Viu 2 bulan", order: true },
-    { duration: "6 Bulan", price: "RM66", order: false },
-    { duration: "12 Bulan", price: "RM120", order: false }
-  ]},
-  { name: "iQIYI PREMIUM",
-    image: "iqiyi.jpg", category: "Streaming", desc: "iQiyi premium murah dan sesuai untuk kaki drama.", emoji: "🎥", badge: "Popular", color: "linear-gradient(135deg, #d9f99d, #65a30d)", plans: [
-    { duration: "1 Bulan", price: "RM15", orderText: "IQIYI 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM26", orderText: "IQIYI 2 bulan", order: true },
-    { duration: "Promo 3 Bulan", price: "RM33", orderText: "IQIYI 3 bulan", order: true },
-    { duration: "6 Bulan", price: "RM66", order: false },
-    { duration: "12 Bulan", price: "RM120", order: false }
-  ]},
-  { name: "SPOTIFY PREMIUM",
-    image: "spotify.jpg", category: "Music", desc: "Spotify premium tanpa iklan, boleh skip dan offline mode.", emoji: "🎧", badge: "Music", color: "linear-gradient(135deg, #dcfce7, #16a34a)", plans: [
-    { duration: "1 Bulan", price: "RM15", orderText: "Spotify 1 bulan", order: true },
-    { duration: "2 Bulan", price: "RM28", orderText: "Spotify 2 bulan", order: true },
-    { duration: "Promo 2 Bulan", price: "RM25", orderText: "Spotify promo", note: "Promo", order: true },
-    { duration: "6 Bulan", price: "RM72", order: false },
-    { duration: "12 Bulan", price: "RM120", order: false }
-  ]}
+const STORAGE_KEY = "numo_active_lead_v70";
+let selectedCategory = "Semua", activeLead = null, pendingSookaOrder = null, countdownTimer = null;
+let uiText = {categoryAll:"Semua",searchPlaceholder:"Cari produk...",emptySearchText:"Tiada produk dijumpai.",syncing:"Syncing...",liveStockPromo:"Live stock & promo",offlinePriceMode:"Tidak dapat sync. Sila refresh.",readyLabel:"Ready",soldOutLabel:"Habis Stok",viewPackages:"Lihat Pakej",closePackages:"Tutup Pakej",buyNow:"Beli Sekarang",assigning:"Mencari reseller...",openTelegram:"Buka Telegram Reseller",findAnother:"Cari Reseller Lain",findingAnother:"Mencari reseller lain...",leadLabel:"Lead ID",deviceAvailableTitle:"Device Available",noHotSelling:"Tiada Hot Selling aktif sekarang.",resumeOrder:"Buka Order Saya"};
+let editable = {brandName:"NUMO VENTURES",brandTagline:"Trusted Since 2015",topbarCta:"Beli Sekarang",heroBadge:"PROMO PREMIUM TERKINI",heroTitle:"Akaun premium murah, trusted & full warranty.",heroDesc:"Pilih pakej dan kami hubungkan anda dengan reseller rasmi NUMO.",heroPrimaryBtn:"Lihat Hot Selling",heroSecondaryBtn:"Lihat Semua Produk",hotTitle:"🔥 Pilihan Paling Hot",hotDesc:"Deal promo terpilih.",productSectionTitle:"Produk Premium",productSectionSubtitle:"Tekan produk untuk lihat pakej dan harga.",stepsTitle:"3 langkah mudah",stepsDesc:"Kami hubungkan anda kepada reseller rasmi yang aktif.",footerTitle:"Ready untuk order?",footerText:"Pilih pakej dan sistem akan hubungkan anda dengan reseller rasmi NUMO.",footerBtn:"Pilih Pakej Sekarang",stickyTitle:"Nak order sekarang?",stickyText:"Pilih pakej untuk dapatkan reseller rasmi",stickyBtn:"Beli",copyrightText:"© 2026 NUMO VENTURES. Semua hak cipta terpelihara.",logo:"Numologo.jpg",trustCards:[],orderSteps:[]};
+const PRODUCTS = [
+{name:"NETFLIX PREMIUM",display:"Netflix Premium",image:"netflix.jpg",category:"Streaming",desc:"Private profile dan warranty penuh.",plans:[{duration:"1 Bulan",price:"RM25"},{duration:"2 Bulan",price:"RM50"},{duration:"3 Bulan Promo",label:"3 Bulan",price:"RM75"},{duration:"6 Bulan",price:"RM150"},{duration:"12 Bulan",price:"RM300"}]},
+{name:"YOUTUBE PREMIUM",display:"YouTube Premium",image:"youtube.jpg",category:"Streaming",desc:"Email Sendiri atau Email Seller.",sections:[{title:"Email Sendiri",plans:[{duration:"1 Bulan",price:"RM16"},{duration:"3 Bulan",price:"RM45"},{duration:"6 Bulan",price:"RM85"},{duration:"12 Bulan",price:"RM144"}]},{title:"Email Seller",plans:[{duration:"1 Bulan",price:"RM10"},{duration:"3 Bulan",price:"RM27"},{duration:"6 Bulan",price:"RM48"},{duration:"12 Bulan",price:"RM84"}]}]},
+{name:"DISNEY+ HOTSTAR",display:"Disney+ Hotstar",image:"disney.jpg",category:"Streaming",desc:"Premium entertainment dengan warranty.",plans:[{duration:"1 Bulan",price:"RM25"},{duration:"2 Bulan",price:"RM45"},{duration:"Promo 3 Bulan",label:"3 Bulan",price:"RM60"},{duration:"6 Bulan",price:"RM120"},{duration:"12 Bulan",price:"RM230"}]},
+{name:"SOOKA PREMIUM",display:"Sooka Premium",image:"sooka.jpg",category:"Streaming",desc:"Pilih device TV, Phone atau Tablet.",plans:[{duration:"1 Bulan",price:"RM25"},{duration:"2 Bulan",price:"RM46"},{duration:"6 Bulan",price:"RM120"},{duration:"12 Bulan",price:"RM216"}]},
+{name:"VIU PREMIUM",display:"Viu Premium",image:"viu.jpg",category:"Streaming",desc:"Drama dan entertainment premium.",plans:[{duration:"1 Bulan",price:"RM15"},{duration:"2 Bulan",price:"RM26"},{duration:"6 Bulan",price:"RM66"},{duration:"12 Bulan",price:"RM120"}]},
+{name:"iQIYI PREMIUM",display:"iQiyi Premium",image:"iqiyi.jpg",category:"Streaming",desc:"Movie dan drama premium.",plans:[{duration:"1 Bulan",price:"RM15"},{duration:"2 Bulan",price:"RM26"},{duration:"Promo 3 Bulan",label:"3 Bulan",price:"RM33"},{duration:"6 Bulan",price:"RM66"},{duration:"12 Bulan",price:"RM120"}]},
+{name:"SPOTIFY PREMIUM",display:"Spotify Premium",image:"spotify.jpg",category:"Music",desc:"Music tanpa iklan dan offline mode.",plans:[{duration:"1 Bulan",price:"RM15"},{duration:"2 Bulan",price:"RM28"},{duration:"Promo 2 Bulan",label:"2 Bulan Promo",price:"RM25"},{duration:"6 Bulan",price:"RM72"},{duration:"12 Bulan",price:"RM120"}]}
 ];
-
-
-const sookaDevices = [
-  { key: "TV", label: "TV" },
-  { key: "PHONE", label: "Phone" },
-  { key: "TABLET", label: "Tablet" }
-];
-
-let websiteControl = { stock: [], promos: [], meta: {}, loaded: false };
-
-/***********************
- * TEXT BUTTON / LABEL CONFIG
- * App.js akan auto-load app2.js.
- * Kalau app2.js tak jumpa, default text bawah akan digunakan.
- ***********************/
-let uiText = {
-  categoryAll: "Semua",
-  searchPlaceholder: "Cari produk... contoh: Netflix, YouTube, Sooka",
-  syncing: "Syncing...",
-  liveStockPromo: "Live stock & promo",
-  offlinePriceMode: "Offline price mode",
-  productCountSuffix: "produk",
-  emptySearchText: "Tiada produk dijumpai. Cuba cari nama atau kategori lain.",
-  readyLabel: "Ready",
-  soldOutLabel: "Habis Stok",
-  viewPackages: "Lihat Pakej",
-  closePackages: "Tutup Pakej",
-  summaryHelper: "Tekan produk atau button bawah untuk lihat semua pakej.",
-  askAdmin: "Tanya Admin",
-  order: "Order",
-  deviceAvailableTitle: "Device Available"
-};
-
-function loadUiTextFile() {
-  return new Promise(resolve => {
-    const script = document.createElement("script");
-    script.src = `app2.js?_=${Date.now()}`;
-
-    script.onload = () => {
-      if (window.NUMO_BUTTON_TEXT && typeof window.NUMO_BUTTON_TEXT === "object") {
-        uiText = { ...uiText, ...window.NUMO_BUTTON_TEXT };
-      }
-      resolve();
-    };
-
-    script.onerror = () => {
-      console.warn("app2.js not found. Using default button text.");
-      resolve();
-    };
-
-    document.head.appendChild(script);
-  });
-}
-
-function getUiText(key) {
-  return uiText[key] ?? "";
-}
-
-function applyUiText() {
-  const search = document.getElementById("searchInput");
-  if (search) search.placeholder = getUiText("searchPlaceholder");
-
-  const empty = document.getElementById("emptyBox");
-  if (empty) empty.textContent = getUiText("emptySearchText");
-
-  if (selectedCategory === "Semua") {
-    selectedCategory = getUiText("categoryAll");
-  }
-}
-
-
-const productsGrid = document.getElementById("productsGrid");
-const productCount = document.getElementById("productCount");
-const emptyBox = document.getElementById("emptyBox");
-const searchInput = document.getElementById("searchInput");
-const categoryButtons = document.getElementById("categoryButtons");
-const syncStatus = document.getElementById("syncStatus");
+const SOOKA_DEVICES=[{key:"TV",label:"TV"},{key:"PHONE",label:"Phone"},{key:"TABLET",label:"Tablet"}];
+let control={stock:[],promos:[],hotSelling:[],meta:{},loaded:false};
+const $=id=>document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await loadUiTextFile();
-  applyUiText();
-
-  await loadEditableContent();
-  applyEditableContent();
-
-  renderCategoryButtons();
-  renderTrustCards();
-  renderSteps();
-  renderProducts();
-
-  await loadWebsiteControl();
-
-  renderProducts();
-  renderCategoryButtons();
+  await loadUiText(); await loadEditable(); applyEditable(); bindEvents();
+  activeLead=loadLead(); updateResumeButton(); renderTrust(); renderSteps(); renderCategories(); renderProducts();
+  await loadControl(); renderHotSelling(); renderProducts();
 });
-
-async function loadEditableContent() {
-  try {
-    const response = await fetch(`index2.html?_=${Date.now()}`);
-    if (!response.ok) throw new Error("index2.html not found");
-    const html = await response.text();
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    const root = doc.querySelector("#editable-content");
-    if (!root) throw new Error("editable-content not found");
-    telegramUsername = root.dataset.telegramUsername || telegramUsername;
-    editableContent.logo = root.dataset.logo || editableContent.logo;
-    root.querySelectorAll("[data-key]").forEach(item => {
-      editableContent[item.dataset.key] = item.textContent.trim();
-    });
-    const trustCards = [...root.querySelectorAll("#trustCards > div")].map(item => ({
-      title: item.dataset.title || "",
-      text: item.textContent.trim()
-    })).filter(item => item.title || item.text);
-    if (trustCards.length) editableContent.trustCards = trustCards;
-    const orderSteps = [...root.querySelectorAll("#orderSteps > div")].map(item => ({
-      title: item.dataset.title || "",
-      text: item.textContent.trim()
-    })).filter(item => item.title || item.text);
-    if (orderSteps.length) editableContent.orderSteps = orderSteps;
-  } catch (error) {
-    console.warn("Using default editable content:", error.message);
-  }
-}
-
-function applyEditableContent() {
-  document.title = editableContent.brandName + " | Premium Account Store";
-  ["brandName","brandTagline","topbarCta","heroBadge","heroTitle","heroDesc","heroPrimaryBtn","heroSecondaryBtn","heroEmoji","heroCardTitle","heroCardText","productSectionTitle","productSectionSubtitle","footerTitle","footerText","footerBtn","stickyTitle","stickyText","stickyBtn","copyrightText"].forEach(id => setText(id, editableContent[id]));
-  setImage("brandLogo", editableContent.logo);
-  setLink("topbarCta", createTelegramLink("Hi nak order"));
-  setLink("heroSecondaryBtn", createTelegramLink("Hi nak order"));
-  setLink("footerBtn", createTelegramLink("Hi nak order"));
-  setLink("stickyBtn", createTelegramLink("Hi nak order"));
-}
-
-async function loadWebsiteControl() {
-  setSyncStatus(getUiText("syncing"), "warn");
-  try {
-    const result = await jsonp({ mode: "getWebsiteControl", _: Date.now() });
-    if (!result.ok) throw new Error(result.error || "Gagal load website control.");
-    websiteControl = {
-      stock: result.data?.stock || [],
-      promos: result.data?.promos || [],
-      meta: result.data?.meta || {},
-      loaded: true
-    };
-    setSyncStatus(getUiText("liveStockPromo"), "ok");
-  } catch (error) {
-    websiteControl.loaded = false;
-    setSyncStatus(getUiText("offlinePriceMode"), "warn");
-  }
-}
-
-function setSyncStatus(text, type) {
-  syncStatus.textContent = text;
-  syncStatus.className = `sync-pill ${type || ""}`;
-}
-
-function setText(id, text) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = text || "";
-}
-function setImage(id, src) {
-  const el = document.getElementById(id);
-  if (el && src) el.src = src;
-}
-function setLink(id, href) {
-  const el = document.getElementById(id);
-  if (el && href) el.href = href;
-}
-function createTelegramLink(text = "Hi nak order") {
-  return `https://t.me/${telegramUsername}?text=${encodeURIComponent(text)}`;
-}
-function safeText(value = "") {
-  return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-}
-function safeAttr(value = "") { return safeText(value); }
-function normalize(value = "") { return String(value || "").trim().toUpperCase(); }
-
-function getCategories() {
-  return [getUiText("categoryAll"), ...new Set(products.map(product => product.category))];
-}
-function renderCategoryButtons() {
-  categoryButtons.innerHTML = getCategories().map(category => {
-    const activeClass = category === selectedCategory ? "active" : "";
-    return `<button class="category-btn ${activeClass}" data-category="${safeAttr(category)}">${safeText(category)}</button>`;
-  }).join("");
-  categoryButtons.querySelectorAll(".category-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      selectedCategory = button.dataset.category;
-      renderCategoryButtons();
-      renderProducts();
-    });
-  });
-}
-function renderTrustCards() {
-  document.getElementById("trustStrip").innerHTML = editableContent.trustCards.map(card => `
-    <div class="trust-card"><strong>${safeText(card.title)}</strong><p>${safeText(card.text)}</p></div>
-  `).join("");
-}
-function renderSteps() {
-  document.getElementById("stepsGrid").innerHTML = editableContent.orderSteps.map((step, index) => `
-    <div class="step"><div class="step-no">${index + 1}</div><h3>${safeText(step.title)}</h3><p>${safeText(step.text)}</p></div>
-  `).join("");
-}
-
-function renderProducts() {
-  const keyword = searchInput.value.toLowerCase().trim();
-  const filteredProducts = products.filter(product => {
-    const matchCategory = selectedCategory === getUiText("categoryAll") || product.category === selectedCategory;
-    const matchKeyword = product.name.toLowerCase().includes(keyword) || product.category.toLowerCase().includes(keyword) || product.desc.toLowerCase().includes(keyword);
-    return matchCategory && matchKeyword;
-  });
-  productCount.textContent = `${filteredProducts.length} ${getUiText("productCountSuffix")}`;
-  if (filteredProducts.length === 0) {
-    productsGrid.innerHTML = "";
-    emptyBox.style.display = "block";
-    return;
-  }
-  emptyBox.style.display = "none";
-  productsGrid.innerHTML = filteredProducts.map(product => renderProductCard(product)).join("");
-  attachProductToggles();
-}
-function renderProductCard(product) {
-  const available = isProductAvailable(product.name, "ALL");
-  const badgeText = available ? product.badge : "Habis Stok";
-  const badgeClass = available ? "" : "sold";
-  const lowestPrice = getLowestDisplayPrice(product);
-  const detailsHtml = product.sections
-    ? renderProductSections(product)
-    : renderPlans(product.plans, product.name, "ALL");
-
-  return `
-    <div class="product-card" data-product="${safeAttr(product.name)}">
-      <div class="product-img product-toggle-area" style="background: ${product.color};" role="button" tabindex="0" aria-label="Lihat pakej ${safeAttr(product.name)}">
-        <span class="badge ${badgeClass}">${safeText(badgeText)}</span>
-        <img
-          class="product-photo"
-          src="${safeAttr(product.image || "")}" 
-          alt="${safeAttr(product.name)}" 
-          loading="lazy" 
-          onerror="this.closest('.product-img').classList.add('image-failed')"
-        >
-        <span class="product-emoji-fallback">${safeText(product.emoji)}</span>
-      </div>
-
-      <div class="product-info">
-        <div class="product-category">${safeText(product.category)}</div>
-        <div class="product-name">${safeText(product.name)}</div>
-        <div class="product-desc">${safeText(product.desc)}</div>
-
-        <div class="product-summary-row">
-          <span class="summary-price">${safeText(lowestPrice)}</span>
-          <span class="stock ${available ? "" : "off"}">${available ? getUiText("readyLabel") : getStockText(product.name, "ALL")}</span>
-        </div>
-        <div class="summary-helper">${safeText(getUiText("summaryHelper"))}</div>
-
-        <button class="view-btn product-toggle" type="button">${safeText(getUiText("viewPackages"))}</button>
-
-        <div class="product-details">
-          ${product.name === "SOOKA PREMIUM" ? renderSookaDeviceBox() : ""}
-          ${detailsHtml}
-        </div>
-      </div>
-    </div>`;
-}
-
-function attachProductToggles() {
-  document.querySelectorAll(".product-card").forEach(card => {
-    const toggleTargets = card.querySelectorAll(".product-toggle, .product-toggle-area");
-    const button = card.querySelector(".view-btn");
-
-    toggleTargets.forEach(target => {
-      target.addEventListener("click", () => toggleProductCard(card, button));
-      target.addEventListener("keydown", event => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          toggleProductCard(card, button);
-        }
-      });
-    });
-  });
-}
-
-function toggleProductCard(card, button) {
-  const isOpen = card.classList.toggle("open");
-  if (button) button.textContent = isOpen ? getUiText("closePackages") : getUiText("viewPackages");
-}
-
-function getLowestDisplayPrice(product) {
-  const plans = [];
-
-  if (product.sections) {
-    product.sections.forEach(section => {
-      (section.plans || []).forEach(plan => plans.push({ ...plan, section: section.title }));
-    });
-  } else {
-    (product.plans || []).forEach(plan => plans.push({ ...plan, section: "ALL" }));
-  }
-
-  const prices = plans.map(plan => {
-    const promo = getPromo(product.name, plan.section, plan.duration);
-    const price = isPromoActive(promo) && promo.promoPrice ? promo.promoPrice : plan.price;
-    const number = Number(String(price).replace(/[^0-9.]/g, ""));
-    return Number.isFinite(number) ? { text: price, number } : null;
-  }).filter(Boolean);
-
-  if (!prices.length) return "Lihat Harga";
-
-  prices.sort((a, b) => a.number - b.number);
-  return `Dari ${prices[0].text}`;
-}
-
-function renderProductSections(product) {
-  return `<div class="section-list">${product.sections.map(section => {
-    const available = isStockOn(product.name, section.title);
-    return `<div class="section-block"><div class="section-block-title"><span>${safeText(section.title)}</span><span class="mini-stock ${available ? "" : "off"}">${available ? getUiText("readyLabel") : getStockText(product.name, section.title)}</span></div>${renderPlans(section.plans, product.name, section.title)}</div>`;
-  }).join("")}</div>`;
-}
-function renderPlans(plans = [], productName = "", sectionName = "ALL") {
-  return `<div class="plans">${plans.map(plan => renderPlan(plan, productName, sectionName)).join("")}</div>`;
-}
-function renderPlan(plan, productName, sectionName) {
-  const available = isProductAvailable(productName, sectionName);
-  const promo = getPromo(productName, sectionName, plan.duration);
-  const promoActive = isPromoActive(promo) && promo.promoPrice;
-  const displayPrice = promoActive ? promo.promoPrice : plan.price;
-  const badgeText = promoActive ? getBadgeText(promo) : "";
-  const badgeClass = promoActive ? getBadgeColorClass(promo.badgeColor) : "";
-  const promoNote = promoActive && promo.note ? promo.note : "";
-  const normalNote = plan.note ? plan.note : "";
-  const orderText = plan.orderText || `${productName} ${plan.duration}`;
-  const askText = `Hi, nak tanya ${productName} ${sectionName !== "ALL" ? sectionName + " " : ""}${plan.duration}`;
-  let linkText = plan.order === false ? askText : orderText;
-  if (productName === "SOOKA PREMIUM") {
-    const availableDevices = getAvailableSookaDevices().map(device => device.label);
-    if (availableDevices.length) linkText = `${orderText} - Device available: ${availableDevices.join(", ")}`;
-  }
-  const buttonLabel = !available ? getStockText(productName, sectionName) : plan.order === false ? getUiText("askAdmin") : getUiText("order");
-  const buttonClass = !available ? "order-btn disabled" : plan.order === false ? "order-btn ask" : "order-btn";
-  const buttonHtml = !available ? `<span class="${buttonClass}">${safeText(buttonLabel)}</span>` : `<a class="${buttonClass}" href="${createTelegramLink(linkText)}" target="_blank" rel="noopener noreferrer">${safeText(buttonLabel)}</a>`;
-  return `<div class="plan-card ${available ? "" : "sold-out"}"><div class="plan-top"><div><div class="plan-name">${safeText(plan.duration)}</div>${promoNote ? `<div class="plan-note">${safeText(promoNote)}</div>` : ""}${normalNote && !promoActive ? `<div class="plan-note">${safeText(normalNote)}</div>` : ""}</div>${promoActive ? `<span class="promo-badge ${badgeClass}">${safeText(badgeText)}</span>` : ""}</div><div class="price-row"><div><span class="price">${safeText(displayPrice)}</span>${promoActive ? `<span class="old-price">${safeText(plan.price)}</span>` : ""}</div><span class="stock ${available ? "" : "off"}">${available ? getUiText("readyLabel") : getStockText(productName, sectionName)}</span></div>${buttonHtml}</div>`;
-}
-function renderSookaDeviceBox() {
-  const devices = getSookaDeviceStates();
-  return `<div class="device-box"><div class="device-title">${safeText(getUiText("deviceAvailableTitle"))}</div><div class="device-row">${devices.map(device => {
-    const cls = device.status === "ON" ? "on" : "off";
-    const icon = device.status === "ON" ? "✅" : "❌";
-    return `<span class="device-pill ${cls}">${safeText(device.label)} ${icon}</span>`;
-  }).join("")}</div></div>`;
-}
-function getStock(product, section = "ALL") {
-  return websiteControl.stock.find(item => normalize(item.product) === normalize(product) && normalize(item.section || "ALL") === normalize(section || "ALL"));
-}
-function isStockOn(product, section = "ALL") {
-  const stock = getStock(product, section);
-  if (!stock) return true;
-  return normalize(stock.status) !== "OFF";
-}
-function getStockText(product, section = "ALL") {
-  const stock = getStock(product, section);
-  return stock?.stockText || getUiText("soldOutLabel");
-}
-function getSookaDeviceStates() {
-  const deviceRows = sookaDevices.map(device => {
-    const stock = getStock("SOOKA PREMIUM", device.key);
-    return { ...device, exists: Boolean(stock), status: stock ? (normalize(stock.status) === "OFF" ? "OFF" : "ON") : "MISSING", stockText: stock?.stockText || "Habis Stok" };
-  });
-  const hasDeviceRows = deviceRows.some(device => device.exists);
-  if (!hasDeviceRows) {
-    const fallbackOn = isStockOn("SOOKA PREMIUM", "ALL");
-    return sookaDevices.map(device => ({ ...device, exists: false, status: fallbackOn ? "ON" : "OFF", stockText: getStockText("SOOKA PREMIUM", "ALL") }));
-  }
-  return deviceRows;
-}
-function getAvailableSookaDevices() {
-  return getSookaDeviceStates().filter(device => device.status === "ON");
-}
-function isProductAvailable(productName, section = "ALL") {
-  if (productName === "SOOKA PREMIUM") return getAvailableSookaDevices().length > 0;
-  return isStockOn(productName, section);
-}
-function getPromo(product, section, duration) {
-  return websiteControl.promos.find(item => normalize(item.product) === normalize(product) && normalize(item.section || "ALL") === normalize(section || "ALL") && normalize(item.duration) === normalize(duration));
-}
-function isPromoActive(promo) {
-  if (!promo) return false;
-  return normalize(promo.promoActive) === "YES" || normalize(promo.promoActive) === "ON";
-}
-function getBadgeText(promo) {
-  if (!promo) return "";
-  const preset = promo.badgePreset || "Promo";
-  return preset === "Custom" ? (promo.badgeCustomText || "Promo") : (promo.badgeText || preset || "Promo");
-}
-function getBadgeColorClass(color = "Gold") {
-  const value = normalize(color);
-  if (value === "GREEN") return "green";
-  if (value === "RED") return "red";
-  if (value === "BLUE") return "blue";
-  if (value === "PURPLE" || value === "PINK") return "purple";
-  if (value === "DARK" || value === "BLACK") return "dark";
-  return "gold";
-}
-function jsonp(params) {
-  return new Promise((resolve, reject) => {
-    const callbackName = "numoCustomerCb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-    const query = new URLSearchParams({ ...params, callback: callbackName });
-    const script = document.createElement("script");
-    const timer = setTimeout(() => { cleanup(); reject(new Error("Request timeout")); }, 15000);
-    window[callbackName] = result => { cleanup(); resolve(result); };
-    function cleanup() {
-      clearTimeout(timer);
-      delete window[callbackName];
-      if (script.parentNode) script.parentNode.removeChild(script);
-    }
-    script.onerror = () => { cleanup(); reject(new Error("Network/API error")); };
-    script.src = API_URL + "?" + query.toString();
-    document.body.appendChild(script);
-  });
-}
-if (searchInput) searchInput.addEventListener("input", renderProducts);
+async function loadUiText(){ await new Promise(resolve=>{ const s=document.createElement("script"); s.src=`app2.js?_=${Date.now()}`; s.onload=()=>{if(window.NUMO_BUTTON_TEXT)uiText={...uiText,...window.NUMO_BUTTON_TEXT};resolve()}; s.onerror=resolve; document.head.appendChild(s); }); }
+async function loadEditable(){ try{const r=await fetch(`index2.html?_=${Date.now()}`),doc=new DOMParser().parseFromString(await r.text(),"text/html"),root=doc.querySelector("#editable-content"); if(!root)return; editable.logo=root.dataset.logo||editable.logo; root.querySelectorAll("[data-key]").forEach(el=>editable[el.dataset.key]=el.textContent.trim()); editable.trustCards=[...root.querySelectorAll("#trustCards>div")].map(el=>({title:el.dataset.title,text:el.textContent.trim()})); editable.orderSteps=[...root.querySelectorAll("#orderSteps>div")].map(el=>({title:el.dataset.title,text:el.textContent.trim()}));}catch(e){console.warn(e.message)}}
+function applyEditable(){["brandName","brandTagline","topbarCta","heroBadge","heroTitle","heroDesc","heroPrimaryBtn","heroSecondaryBtn","hotTitle","hotDesc","productSectionTitle","productSectionSubtitle","stepsTitle","stepsDesc","footerTitle","footerText","footerBtn","stickyTitle","stickyText","stickyBtn","copyrightText"].forEach(id=>setText(id,editable[id])); $("brandLogo").src=editable.logo; $("searchInput").placeholder=uiText.searchPlaceholder; $("emptyBox").textContent=uiText.emptySearchText; $("resumeOrderBtn").textContent=uiText.resumeOrder;}
+function bindEvents(){ $("searchInput").addEventListener("input",renderProducts); $("closeHandoffBtn").onclick=closeHandoff; $("closeDeviceBtn").onclick=()=>hide("deviceModal"); $("resumeOrderBtn").onclick=()=>activeLead&&showHandoff(activeLead); $("reassignBtn").onclick=reassignLead; $("handoffModal").onclick=e=>{if(e.target.id==="handoffModal")closeHandoff()}; $("deviceModal").onclick=e=>{if(e.target.id==="deviceModal")hide("deviceModal")};}
+function renderTrust(){ $("trustGrid").innerHTML=editable.trustCards.map(x=>`<article class="trust"><strong>${safe(x.title)}</strong><p>${safe(x.text)}</p></article>`).join(""); }
+function renderSteps(){ $("stepsGrid").innerHTML=editable.orderSteps.map((x,i)=>`<article class="step"><div class="num">${i+1}</div><strong>${safe(x.title)}</strong><p>${safe(x.text)}</p></article>`).join(""); }
+async function loadControl(){ setSync(uiText.syncing,"warn"); try{const r=await jsonp({mode:"getWebsiteControl",_:Date.now()}); if(!r.ok)throw new Error(r.error); control={stock:r.data?.stock||[],promos:r.data?.promos||[],hotSelling:r.data?.hotSelling||[],meta:r.data?.meta||{},loaded:true}; setSync(uiText.liveStockPromo,"live");}catch(e){control.loaded=false;setSync(uiText.offlinePriceMode,"warn");}}
+function setSync(t,c){$("syncStatus").textContent=t;$("syncStatus").className=`sync ${c}`;}
+function renderCategories(){const cats=[uiText.categoryAll,...new Set(PRODUCTS.map(p=>p.category))];$("categoryButtons").innerHTML=cats.map(c=>`<button class="category ${c===selectedCategory?"active":""}" data-category="${attr(c)}">${safe(c)}</button>`).join("");$("categoryButtons").querySelectorAll("button").forEach(b=>b.onclick=()=>{selectedCategory=b.dataset.category;renderCategories();renderProducts()});}
+function renderHotSelling(){const items=control.hotSelling.filter(x=>isAvailable(x.product,x.section||"ALL")).slice(0,3); if(!items.length){hide("hot");return;} show("hot"); $("hotGrid").innerHTML=items.map(x=>{const p=findProduct(x.product),local=findLocalPlan(x.product,x.section||"ALL",x.duration),badge=x.hotBadge||x.badge||x.hotSellingBadge||"Hot Selling",old=local?.price&&local.price!==x.promoPrice?`<span class="old">${safe(local.price)}</span>`:"";return `<article class="hot"><div class="hot-img"><img src="${attr(p?.image||"")}" alt="${attr(p?.display||x.product)}"><span class="hot-badge">${safe(badge)}</span></div><div class="hot-body"><div class="hot-name">${safe(p?.display||x.product)}</div><div class="hot-plan">${safe(displayDuration(x.duration))}${normalize(x.section||"ALL")!=="ALL"?" • "+safe(x.section):""}</div><div><span class="hot-price">${safe(x.promoPrice)}</span>${old}</div><button class="buy" data-buy-product="${attr(x.product)}" data-buy-section="${attr(x.section||"ALL")}" data-buy-duration="${attr(x.duration)}" data-buy-price="${attr(x.promoPrice)}">${safe(uiText.buyNow)}</button></div></article>`}).join("");bindBuy($("hotGrid"));}
+function renderProducts(){const q=$("searchInput").value.toLowerCase().trim(),items=PRODUCTS.filter(p=>(selectedCategory===uiText.categoryAll||p.category===selectedCategory)&&(!q||`${p.name} ${p.display} ${p.desc}`.toLowerCase().includes(q))); $("emptyBox").classList.toggle("hidden",!!items.length); $("productsGrid").innerHTML=items.map(renderProduct).join(""); $("productsGrid").querySelectorAll(".expand").forEach(b=>b.onclick=()=>{const p=b.closest(".product"),open=p.classList.toggle("open");b.textContent=open?uiText.closePackages:uiText.viewPackages}); bindBuy($("productsGrid"));}
+function renderProduct(p){const ok=isAvailable(p.name,"ALL");return `<article class="product"><div class="summary"><img class="photo" src="${attr(p.image)}" alt="${attr(p.display)}"><div><div class="pname">${safe(p.display)}</div><div class="pdesc">${safe(p.desc)}</div><div class="stat"><span class="from">${safe(lowestPrice(p))}</span><span class="pill ${ok?"":"off"}">${safe(ok?uiText.readyLabel:getStockText(p.name,"ALL"))}</span></div></div></div><button class="expand">${safe(uiText.viewPackages)}</button><div class="details">${p.name==="SOOKA PREMIUM"?renderDevices():""}${p.sections?p.sections.map(s=>`<div class="sub">${safe(s.title)}</div>${renderPlans(p,s.plans,s.title)}`).join(""):renderPlans(p,p.plans,"ALL")}</div></article>`;}
+function renderPlans(product,plans,section){return plans.map(plan=>{const ok=isAvailable(product.name,section),promo=findPromo(product.name,section,plan.duration),on=isPromoActive(promo)&&promo.promoPrice,price=on?promo.promoPrice:plan.price,badge=on?`<span class="badge ${badgeClass(promo.badgeColor)}">${safe(promo.badgeText||promo.badgePreset||"Promo")}</span>`:"",note=on&&promo.note?`<div class="note">${safe(promo.note)}</div>`:"",button=ok?`<button class="buy" data-buy-product="${attr(product.name)}" data-buy-section="${attr(section)}" data-buy-duration="${attr(plan.duration)}" data-buy-price="${attr(price)}">${safe(uiText.buyNow)}</button>`:`<button class="buy" disabled>${safe(getStockText(product.name,section))}</button>`;return `<div class="plan"><div class="plan-top"><span class="plan-name">${safe(plan.label||displayDuration(plan.duration))}</span>${badge}</div>${note}<div class="plan-bottom"><div><span class="price">${safe(price)}</span>${on&&price!==plan.price?`<span class="old">${safe(plan.price)}</span>`:""}</div>${button}</div></div>`}).join("");}
+function renderDevices(){return `<div class="devices"><strong>${safe(uiText.deviceAvailableTitle)}</strong><div class="device-row">${sookaStates().map(d=>`<span class="device ${d.on?"":"off"}">${safe(d.label)} ${d.on?"✓":"✕"}</span>`).join("")}</div></div>`;}
+function bindBuy(root){root.querySelectorAll("[data-buy-product]").forEach(btn=>btn.onclick=()=>{const o={product:btn.dataset.buyProduct,section:btn.dataset.buySection,duration:btn.dataset.buyDuration,price:btn.dataset.buyPrice}; if(o.product==="SOOKA PREMIUM"&&normalize(o.section)==="ALL")return chooseSooka(o); assignLead(o,btn);});}
+function chooseSooka(order){pendingSookaOrder=order; const options=sookaStates().filter(x=>x.on); $("chooseDeviceList").innerHTML=options.map(x=>`<button class="device-btn" data-device="${x.key}">${safe(x.label)}</button>`).join(""); $("chooseDeviceList").querySelectorAll("button").forEach(b=>b.onclick=()=>{hide("deviceModal");assignLead({...order,section:b.dataset.device},null)});show("deviceModal");}
+async function assignLead(order,button){const old=button?.textContent;if(button){button.disabled=true;button.textContent=uiText.assigning}try{const r=await jsonp({mode:"assignReseller",product:order.product,section:order.section,duration:order.duration,price:order.price,source:"WEBSITE"});if(!r.ok)throw new Error(r.error||"Assign failed");activeLead=r.data;saveLead(activeLead);updateResume();showHandoff(activeLead)}catch(e){alert("Maaf, sistem tidak dapat mencari reseller sekarang. Sila cuba semula.")}finally{if(button){button.disabled=false;button.textContent=old}}}
+function showHandoff(lead){setText("selectedPackage",`${displayProduct(lead.product)} • ${displayDuration(lead.duration)}${normalize(lead.section||"ALL")!=="ALL"?" • "+lead.section:""}`);setText("selectedPrice",lead.price);setText("leadIdText",`${uiText.leadLabel}: ${lead.leadId}`);setText("resellerName",lead.reseller?.name||lead.resellerName||"Reseller NUMO");const user=lead.reseller?.telegramUsername||lead.telegramUsername||"";setText("resellerUsername",user?`@${user}`:""); $("openTelegramBtn").href=lead.telegramUrl||"#";$("openTelegramBtn").textContent=uiText.openTelegram;setText("handoffTitle",lead.status==="REASSIGNED"?"Reseller Baru Ditemui":"Reseller Rasmi Ditemui");setText("handoffStatus",lead.status==="REASSIGNED"?"✅ Anda dihubungkan dengan reseller rasmi yang baru.":"✅ Reseller rasmi tersedia untuk bantu order anda.");hideMsg();show("handoffModal");startCountdown(lead);}
+function closeHandoff(){hide("handoffModal");clearInterval(countdownTimer);}
+async function reassignLead(){if(!activeLead?.leadId)return;const b=$("reassignBtn");b.disabled=true;b.textContent=uiText.findingAnother;try{const r=await jsonp({mode:"reassignReseller",leadId:activeLead.leadId});if(!r.ok){if(r.code==="WAIT_5_MINUTES"){modalMsg(r.error||"Sila tunggu 5 minit.");startCountdown(activeLead,Number(r.waitSeconds||r.data?.waitSeconds||0));return;}throw new Error(r.error||"Gagal cari reseller.");}activeLead=r.data;saveLead(activeLead);showHandoff(activeLead);}catch(e){modalMsg(e.message);}}
+function startCountdown(lead, seconds){clearInterval(countdownTimer);const b=$("reassignBtn"),info=$("waitInfo"),wait=Number(lead.reassignAfterMinutes||control.meta?.reassignWaitMinutes||5),finish=new Date(lead.assignedAt||Date.now()).getTime()+wait*60000;let override=seconds||0;const tick=()=>{let left=override>0?override--:Math.ceil((finish-Date.now())/1000);if(left<=0){b.disabled=false;b.classList.add("ready");b.textContent=uiText.findAnother;info.textContent="Belum dibalas? Anda kini boleh cari reseller aktif yang lain.";clearInterval(countdownTimer);return;}b.disabled=true;b.classList.remove("ready");b.textContent=`Tunggu ${Math.floor(left/60)}:${String(left%60).padStart(2,"0")}`;info.textContent="Jika reseller belum membalas, button Cari Reseller Lain akan aktif selepas 5 minit.";};tick();countdownTimer=setInterval(tick,1000);}
+function modalMsg(t){$("modalMsg").textContent=t;$("modalMsg").classList.add("show");} function hideMsg(){$("modalMsg").classList.remove("show");}
+function saveLead(x){localStorage.setItem(STORAGE_KEY,JSON.stringify(x));} function loadLead(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")}catch(e){return null}} function updateResume(){$("resumeOrderBtn").classList.toggle("hidden",!activeLead);}
+function findProduct(n){return PRODUCTS.find(p=>normalize(p.name)===normalize(n));} function displayProduct(n){return findProduct(n)?.display||n;} function findLocalPlan(n,s,d){const p=findProduct(n);if(!p)return null;const plans=p.sections?(p.sections.find(x=>normalize(x.title)===normalize(s))?.plans||[]):p.plans;return plans.find(x=>normalize(x.duration)===normalize(d));} function displayDuration(d){return String(d||"").replace(/^Promo\\s+/i,"").replace(/\\s+Promo$/i,"");}
+function findPromo(p,s,d){return control.promos.find(x=>normalize(x.product)===normalize(p)&&normalize(x.section||"ALL")===normalize(s||"ALL")&&normalize(x.duration)===normalize(d));} function isPromoActive(p){return p&&["ON","YES"].includes(normalize(p.promoActive));}
+function getStock(p,s="ALL"){return control.stock.find(x=>normalize(x.product)===normalize(p)&&normalize(x.section||"ALL")===normalize(s||"ALL"));} function isStockOn(p,s="ALL"){const x=getStock(p,s);return !x||normalize(x.status)!=="OFF";} function getStockText(p,s="ALL"){return getStock(p,s)?.stockText||uiText.soldOutLabel;}
+function sookaStates(){const deviceRows=SOOKA_DEVICES.some(d=>getStock("SOOKA PREMIUM",d.key));return SOOKA_DEVICES.map(d=>({...d,on:deviceRows?isStockOn("SOOKA PREMIUM",d.key):isStockOn("SOOKA PREMIUM","ALL")}));}
+function isAvailable(p,s="ALL"){if(normalize(p)==="SOOKA PREMIUM")return sookaStates().some(x=>x.on);if(normalize(p)==="YOUTUBE PREMIUM"&&normalize(s)==="ALL")return isStockOn(p,"Email Sendiri")||isStockOn(p,"Email Seller");return isStockOn(p,s);}
+function lowestPrice(p){const list=[];if(p.sections)p.sections.forEach(s=>s.plans.forEach(x=>list.push({x,s:s.title})));else p.plans.forEach(x=>list.push({x,s:"ALL"}));const values=list.map(y=>{const promo=findPromo(p.name,y.s,y.x.duration),v=isPromoActive(promo)&&promo.promoPrice?promo.promoPrice:y.x.price;return {v,n:Number(String(v).replace(/[^0-9.]/g,""))}}).filter(x=>Number.isFinite(x.n)).sort((a,b)=>a.n-b.n);return values.length?`Dari ${values[0].v}`:"Lihat Harga";}
+function badgeClass(c){c=normalize(c);return ["GREEN","RED","BLUE","DARK"].includes(c)?c.toLowerCase():"";} function setText(id,t){if($(id))$(id).textContent=t||"";} function safe(v=""){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");} function attr(v=""){return safe(v);} function normalize(v=""){return String(v||"").trim().toUpperCase();} function show(id){$(id).classList.remove("hidden");} function hide(id){$(id).classList.add("hidden");}
+function jsonp(params){return new Promise((resolve,reject)=>{const cb="numoC_"+Date.now()+"_"+Math.floor(Math.random()*100000),s=document.createElement("script"),timer=setTimeout(()=>{clean();reject(new Error("Timeout"))},20000);window[cb]=d=>{clean();resolve(d)};function clean(){clearTimeout(timer);delete window[cb];s.remove()}s.onerror=()=>{clean();reject(new Error("Network error"))};s.src=API_URL+"?"+new URLSearchParams({...params,callback:cb});document.body.appendChild(s);});}
