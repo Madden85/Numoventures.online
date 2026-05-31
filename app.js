@@ -1,5 +1,5 @@
 /***********************
- * NUMO CUSTOMER WEBSITE STEP 4 V7.0
+ * NUMO CUSTOMER WEBSITE STEP 4 V7.1 - SYNC/PRODUCT DISPLAY FIX
  * Hot Selling + Auto Assign Reseller + 5-min Reassign
  ***********************/
 const API_URL = "https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec";
@@ -22,7 +22,7 @@ const $=id=>document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadUiText(); await loadEditable(); applyEditable(); bindEvents();
-  activeLead=loadLead(); updateResumeButton(); renderTrust(); renderSteps(); renderCategories(); renderProducts();
+  activeLead=loadLead(); updateResume(); renderTrust(); renderSteps(); renderCategories(); renderProducts();
   await loadControl(); renderHotSelling(); renderProducts();
 });
 async function loadUiText(){ await new Promise(resolve=>{ const s=document.createElement("script"); s.src=`app2.js?_=${Date.now()}`; s.onload=()=>{if(window.NUMO_BUTTON_TEXT)uiText={...uiText,...window.NUMO_BUTTON_TEXT};resolve()}; s.onerror=resolve; document.head.appendChild(s); }); }
