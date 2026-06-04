@@ -16,7 +16,7 @@ const PRODUCTS = [
 {name:"SOOKA PREMIUM",display:"Sooka Premium",image:"sooka.jpg",category:"Streaming",desc:"Pilih device TV, Phone atau Tablet.",plans:[{duration:"1 Bulan",price:"RM25"},{duration:"2 Bulan",price:"RM46"},{duration:"6 Bulan",price:"RM120"},{duration:"12 Bulan",price:"RM216"}]},
 {name:"VIU PREMIUM",display:"Viu Premium",image:"viu.jpg",category:"Streaming",desc:"Drama dan entertainment premium.",plans:[{duration:"1 Bulan",price:"RM15"},{duration:"2 Bulan",price:"RM26"},{duration:"6 Bulan",price:"RM66"},{duration:"12 Bulan",price:"RM120"}]},
 {name:"iQIYI PREMIUM",display:"iQiyi Premium",image:"iqiyi.jpg",category:"Streaming",desc:"Movie dan drama premium.",plans:[{duration:"1 Bulan",price:"RM15"},{duration:"2 Bulan",price:"RM26"},{duration:"Promo 3 Bulan",label:"3 Bulan",price:"RM33"},{duration:"6 Bulan",price:"RM66"},{duration:"12 Bulan",price:"RM120"}]},
-{name:"SPOTIFY PREMIUM",display:"Spotify Premium",image:"spotify.jpg",category:"Music",desc:"Music tanpa iklan dan offline mode.",plans:[{duration:"1 Bulan",price:"RM15"},{duration:"2 Bulan",price:"RM28"},{duration:"Promo 2 Bulan",label:"2 Bulan Promo",price:"RM25"},{duration:"6 Bulan",price:"RM72"},{duration:"12 Bulan",price:"RM120"}]}
+{name:"SPOTIFY PREMIUM",display:"Spotify Premium",image:"spotify.jpg",category:"Music",desc:"Music tanpa iklan dan offline mode.",plans:[{duration:"1 Bulan",price:"RM15"},{duration:"2 Bulan",price:"RM28"},{duration:"6 Bulan",price:"RM72"},{duration:"12 Bulan",price:"RM120"}]}
 ];
 const SOOKA_DEVICES=[{key:"TV",label:"TV"},{key:"PHONE",label:"Phone"},{key:"TABLET",label:"Tablet"}];
 let control={stock:[],promos:[],hotSelling:[],meta:{},loaded:false};
