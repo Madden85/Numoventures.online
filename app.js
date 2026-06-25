@@ -1,12 +1,14 @@
 /***********************
  * NUMO CUSTOMER WEBSITE STEP 4 V7.5
  * RESELLER REFERRAL LINK + STATUS FALLBACK
- * Hot Selling + Auto Assign Reseller + 5-min Reassign
+ * Hot Selling + Auto Assign Reseller + 5-min Admin Handoff
  ***********************/
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxVm79WzB0PnyDcFPM9hWl4Lj1smvQJe2EaoeGzNAExzp8PTbHwdfxmJ-Uqbml2RGlF/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec";
 const REFERRAL_CODE = getReferralCodeFromUrl();
 const STORAGE_KEY = "numo_active_lead_v75";
+const ADMIN_TELEGRAM_USERNAME = "ownernumoventures";
+const ADMIN_TELEGRAM_URL = "https://t.me/" + ADMIN_TELEGRAM_USERNAME;
 
 let selectedCategory = "Semua";
 let activeLead = null;
@@ -30,8 +32,11 @@ let uiText = {
   buyNow: "Beli Sekarang",
   assigning: "Mencari reseller...",
   openTelegram: "Buka Telegram Reseller",
-  findAnother: "Cari Reseller Lain",
-  findingAnother: "Mencari reseller lain...",
+  findAnother: "Hubungi Admin",
+  findingAnother: "Membuka Telegram admin...",
+  contactAdmin: "Hubungi Admin",
+  waitingAdminInfo: "Jika reseller belum membalas, button Hubungi Admin akan aktif selepas 5 minit.",
+  contactAdminInfo: "Reseller belum reply? Anda boleh terus hubungi admin untuk bantuan.",
   leadLabel: "Lead ID",
   deviceAvailableTitle: "Device Available",
   noHotSelling: "Tiada Hot Selling aktif sekarang.",
@@ -291,7 +296,7 @@ function bindEvents() {
   if ($("closeHandoffBtn")) $("closeHandoffBtn").onclick = closeHandoff;
   if ($("closeDeviceBtn")) $("closeDeviceBtn").onclick = () => hide("deviceModal");
   if ($("resumeOrderBtn")) $("resumeOrderBtn").onclick = () => activeLead && showHandoff(activeLead);
-  if ($("reassignBtn")) $("reassignBtn").onclick = reassignLead;
+  if ($("reassignBtn")) $("reassignBtn").onclick = contactAdmin;
 
   if ($("handoffModal")) {
     $("handoffModal").onclick = e => {
@@ -733,10 +738,13 @@ function showHandoff(lead) {
 
   if ($("openTelegramBtn")) {
     $("openTelegramBtn").href = lead.telegramUrl || "#";
-    $("openTelegramBtn").textContent = uiText.openTelegram;
+    $("openTelegramBtn").textContent = lead.status === "ADMIN_HANDOFF" ? (uiText.contactAdmin || "Hubungi Admin") : uiText.openTelegram;
   }
 
-  if (lead.referralFallback) {
+  if (lead.status === "ADMIN_HANDOFF") {
+    setText("handoffTitle", "Admin NUMO");
+    setText("handoffStatus", "✅ Reseller belum reply. Anda akan dihubungkan terus kepada admin.");
+  } else if (lead.referralFallback) {
     setText("handoffTitle", "Referral Tidak Aktif");
     setText("handoffStatus", "✅ Link referral reseller ini tidak aktif. Kami carikan reseller aktif lain untuk anda.");
   } else {
@@ -749,6 +757,13 @@ function showHandoff(lead) {
     );
   }
 
+  const adminBtn = $("reassignBtn");
+  if (adminBtn) {
+    adminBtn.onclick = contactAdmin;
+    adminBtn.disabled = true;
+    adminBtn.classList.remove("ready");
+  }
+
   hideMsg();
   show("handoffModal");
   startCountdown(lead);
@@ -759,40 +774,12 @@ function closeHandoff() {
   clearInterval(countdownTimer);
 }
 
+function contactAdmin() {
+  window.open(ADMIN_TELEGRAM_URL, "_blank", "noopener");
+}
+
 async function reassignLead() {
-  if (!activeLead?.leadId) return;
-
-  const b = $("reassignBtn");
-
-  if (b) {
-    b.disabled = true;
-    b.textContent = uiText.findingAnother;
-  }
-
-  try {
-    const r = await jsonp({
-      mode: "reassignReseller",
-      leadId: activeLead.leadId
-    });
-
-    if (!r.ok) {
-      if (r.code === "WAIT_5_MINUTES") {
-        modalMsg(r.error || "Sila tunggu 5 minit.");
-        startCountdown(activeLead, Number(r.waitSeconds || r.data?.waitSeconds || 0));
-        return;
-      }
-
-      throw new Error(r.error || "Gagal cari reseller.");
-    }
-
-    activeLead = r.data;
-    saveLead(activeLead);
-    showHandoff(activeLead);
-  } catch (e) {
-    modalMsg(e.message);
-  } finally {
-    if (b) b.textContent = uiText.findAnother;
-  }
+  contactAdmin();
 }
 
 function startCountdown(lead, seconds) {
@@ -816,8 +803,9 @@ function startCountdown(lead, seconds) {
     if (left <= 0) {
       b.disabled = false;
       b.classList.add("ready");
-      b.textContent = uiText.findAnother;
-      info.textContent = "Belum dibalas? Anda kini boleh cari reseller aktif yang lain.";
+      b.textContent = uiText.contactAdmin || uiText.findAnother;
+      b.onclick = contactAdmin;
+      info.textContent = uiText.contactAdminInfo || "Reseller belum reply? Anda boleh terus hubungi admin untuk bantuan.";
       clearInterval(countdownTimer);
       return;
     }
@@ -825,7 +813,7 @@ function startCountdown(lead, seconds) {
     b.disabled = true;
     b.classList.remove("ready");
     b.textContent = `Tunggu ${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`;
-    info.textContent = "Jika reseller belum membalas, button Cari Reseller Lain akan aktif selepas 5 minit.";
+    info.textContent = uiText.waitingAdminInfo || "Jika reseller belum membalas, button Hubungi Admin akan aktif selepas 5 minit.";
   };
 
   tick();
