@@ -167,6 +167,19 @@ const PRODUCTS = [
     ]
   },
   {
+    name: "PRIME VIDEO",
+    display: "Prime Video",
+    image: "primevideo.jpg",
+    category: "Streaming",
+    desc: "Movie dan siri premium daripada Prime Video.",
+    plans: [
+      { duration: "1 Bulan", price: "RM20" },
+      { duration: "2 Bulan", price: "RM38" },
+      { duration: "6 Bulan", price: "RM108" },
+      { duration: "12 Bulan", price: "RM198" }
+    ]
+  },
+  {
     name: "SPOTIFY PREMIUM",
     display: "Spotify Premium",
     image: "spotify.jpg",
