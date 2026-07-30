@@ -4,7 +4,7 @@
  * Hot Selling + Auto Assign Reseller + 5-min Admin Handoff
  ***********************/
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwqqBJ1A9tqYhPhEJe37Ik3-HGKZOHUUHqdf_jtLJuTv8tqQpt6WqX5jUBQwKPMbM92tw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxVm79WzB0PnyDcFPM9hWl4Lj1smvQJe2EaoeGzNAExzp8PTbHwdfxmJ-Uqbml2RGlF/exec";
 const REFERRAL_CODE = getReferralCodeFromUrl();
 const STORAGE_KEY = "numo_active_lead_v75";
 const ADMIN_TELEGRAM_USERNAME = "ownernumoventures";
