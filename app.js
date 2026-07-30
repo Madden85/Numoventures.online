@@ -17,6 +17,7 @@ let countdownTimer = null;
 let hotItems = [];
 let hotIndex = 0;
 let hotTimer = null;
+let controlLoading = true;
 
 let uiText = {
   categoryAll: "Semua",
@@ -355,6 +356,8 @@ function renderSteps() {
 }
 
 async function loadControl() {
+  controlLoading = true;
+  renderProducts();
   setSync(uiText.syncing, "warn");
 
   try {
@@ -377,7 +380,17 @@ async function loadControl() {
   } catch (e) {
     control.loaded = false;
     setSync(uiText.offlinePriceMode, "warn");
+  } finally {
+    controlLoading = false;
   }
+}
+
+function isDataLoading() {
+  return controlLoading === true;
+}
+
+function loadingDataText() {
+  return "Sync... Sila Tunggu";
 }
 
 function setSync(t, c) {
@@ -509,7 +522,22 @@ function renderProducts() {
   $("productsGrid").innerHTML = items.map(renderProduct).join("");
 
   $("productsGrid").querySelectorAll(".expand").forEach(b => {
+    if (isDataLoading() || b.disabled) {
+      b.disabled = true;
+      b.setAttribute("aria-disabled", "true");
+      b.textContent = loadingDataText();
+      b.onclick = null;
+      return;
+    }
+
     b.onclick = () => {
+      if (isDataLoading()) {
+        b.disabled = true;
+        b.setAttribute("aria-disabled", "true");
+        b.textContent = loadingDataText();
+        return;
+      }
+
       const p = b.closest(".product");
       const open = p.classList.toggle("open");
       b.textContent = open ? uiText.closePackages : uiText.viewPackages;
@@ -520,7 +548,10 @@ function renderProducts() {
 }
 
 function renderProduct(p) {
-  const ok = isAvailable(p.name, "ALL");
+  const waiting = isDataLoading();
+  const ok = !waiting && isAvailable(p.name, "ALL");
+  const viewButtonText = waiting ? loadingDataText() : uiText.viewPackages;
+  const viewButtonDisabled = waiting ? ' disabled aria-disabled="true"' : "";
 
   return `
     <article class="product">
@@ -538,7 +569,7 @@ function renderProduct(p) {
         </div>
       </div>
 
-      <button class="expand">${safe(uiText.viewPackages)}</button>
+      <button class="expand" type="button"${viewButtonDisabled}>${safe(viewButtonText)}</button>
 
       <div class="details">
         ${p.name === "SOOKA PREMIUM" ? renderDevices() : ""}
