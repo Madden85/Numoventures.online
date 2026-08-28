@@ -21,7 +21,7 @@ function applyThemeBackground() {
 
   img.onload = () => {
     document.body.style.backgroundColor = "#f5f7fb";
-    document.body.style.backgroundImage = `linear-gradient(rgba(245,247,251,.72), rgba(245,247,251,.72)), url("${freshUrl}")`;
+    document.body.style.backgroundImage = `linear-gradient(rgba(245,247,251,.16), rgba(245,247,251,.16)), url("${freshUrl}")`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center top";
     document.body.style.backgroundRepeat = "no-repeat";
