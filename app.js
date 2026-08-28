@@ -37,6 +37,26 @@ function applyThemeBackground() {
   img.src = freshUrl;
 }
 
+
+// === NUMO SPECIAL CELEBRATION BANNER ===
+// Tukar gambar sahaja di GitHub: special-banner.jpg
+// Jika fail tiada/gagal load, ruang banner disorok secara automatik.
+const SPECIAL_BANNER_FILE = "special-banner.jpg";
+
+function applyCelebrationBanner() {
+  const box = document.getElementById("celebrationBanner");
+  const img = document.getElementById("celebrationBannerImg");
+  if (!box || !img) return;
+
+  const freshUrl = `${SPECIAL_BANNER_FILE}?v=${Date.now()}`;
+  img.onload = () => box.classList.remove("hidden");
+  img.onerror = () => {
+    box.classList.add("hidden");
+    img.removeAttribute("src");
+  };
+  img.src = freshUrl;
+}
+
 let selectedCategory = "Semua";
 let activeLead = null;
 let pendingSookaOrder = null;
@@ -241,6 +261,7 @@ const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", async () => {
   applyThemeBackground();
+  applyCelebrationBanner();
   await loadUiText();
   await loadEditable();
 
