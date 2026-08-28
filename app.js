@@ -10,6 +10,33 @@ const STORAGE_KEY = "numo_active_lead_v75";
 const ADMIN_TELEGRAM_USERNAME = "ownernumoventures";
 const ADMIN_TELEGRAM_URL = "https://t.me/" + ADMIN_TELEGRAM_USERNAME;
 
+// === NUMO WEBSITE THEME BACKGROUND ===
+// Tukar gambar sahaja di GitHub: background.jpg
+// Nama fail kekal sama. Cache-busting memastikan browser ambil gambar terbaru setiap kali page dibuka.
+const THEME_BACKGROUND_FILE = "background.jpg";
+
+function applyThemeBackground() {
+  const freshUrl = `${THEME_BACKGROUND_FILE}?v=${Date.now()}`;
+  const img = new Image();
+
+  img.onload = () => {
+    document.body.style.backgroundColor = "#f5f7fb";
+    document.body.style.backgroundImage = `linear-gradient(rgba(245,247,251,.72), rgba(245,247,251,.72)), url("${freshUrl}")`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center top";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundAttachment = "fixed";
+  };
+
+  // Jika background.jpg belum ada / gagal load, design asal kekal tanpa ganggu website.
+  img.onerror = () => {
+    document.body.style.backgroundColor = "#f5f7fb";
+    document.body.style.backgroundImage = "none";
+  };
+
+  img.src = freshUrl;
+}
+
 let selectedCategory = "Semua";
 let activeLead = null;
 let pendingSookaOrder = null;
@@ -213,6 +240,7 @@ let control = {
 const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", async () => {
+  applyThemeBackground();
   await loadUiText();
   await loadEditable();
 
