@@ -175,16 +175,16 @@ const PRODUCTS = [
     ]
   },
   {
-    name: "SOOKA PREMIUM",
-    display: "Sooka Premium",
-    image: "sooka.jpg",
+    name: "HBO MAX",
+    display: "HBO Max",
+    image: "Numologo.jpg",
     category: "Streaming",
-    desc: "Pilih device TV, Phone atau Tablet.",
+    desc: "Streaming premium HBO Max dengan profile sendiri.",
     plans: [
-      { duration: "1 Bulan", price: "RM25" },
-      { duration: "2 Bulan", price: "RM46" },
-      { duration: "6 Bulan", price: "RM120" },
-      { duration: "12 Bulan", price: "RM216" }
+      { duration: "1 Bulan", price: "RM20" },
+      { duration: "2 Bulan", price: "RM38" },
+      { duration: "6 Bulan", price: "RM105" },
+      { duration: "12 Bulan", price: "RM195" }
     ]
   },
   {
