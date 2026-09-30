@@ -37,6 +37,26 @@ function applyThemeBackground() {
   img.src = freshUrl;
 }
 
+
+// === NUMO SPECIAL CELEBRATION BANNER ===
+// Tukar gambar sahaja di GitHub: special-banner.jpg
+// Jika fail tiada/gagal load, ruang banner disorok secara automatik.
+const SPECIAL_BANNER_FILE = "special-banner.jpg";
+
+function applyCelebrationBanner() {
+  const box = document.getElementById("celebrationBanner");
+  const img = document.getElementById("celebrationBannerImg");
+  if (!box || !img) return;
+
+  const freshUrl = `${SPECIAL_BANNER_FILE}?v=${Date.now()}`;
+  img.onload = () => box.classList.remove("hidden");
+  img.onerror = () => {
+    box.classList.add("hidden");
+    img.removeAttribute("src");
+  };
+  img.src = freshUrl;
+}
+
 let selectedCategory = "Semua";
 let activeLead = null;
 let pendingSookaOrder = null;
@@ -155,16 +175,16 @@ const PRODUCTS = [
     ]
   },
   {
-    name: "SOOKA PREMIUM",
-    display: "Sooka Premium",
-    image: "sooka.jpg",
+    name: "HBO MAX",
+    display: "HBO Max",
+    image: "Numologo.jpg",
     category: "Streaming",
-    desc: "Pilih device TV, Phone atau Tablet.",
+    desc: "Streaming premium HBO Max dengan profile sendiri.",
     plans: [
-      { duration: "1 Bulan", price: "RM25" },
-      { duration: "2 Bulan", price: "RM46" },
-      { duration: "6 Bulan", price: "RM120" },
-      { duration: "12 Bulan", price: "RM216" }
+      { duration: "1 Bulan", price: "RM20" },
+      { duration: "2 Bulan", price: "RM38" },
+      { duration: "6 Bulan", price: "RM105" },
+      { duration: "12 Bulan", price: "RM195" }
     ]
   },
   {
@@ -241,6 +261,7 @@ const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", async () => {
   applyThemeBackground();
+  applyCelebrationBanner();
   await loadUiText();
   await loadEditable();
 
@@ -726,8 +747,6 @@ async function assignLead(order, button) {
   }
 
   try {
-    // Backend production now creates a Supabase website lead instead of
-    // assigning a reseller directly. Valid referral handling remains backend-side.
     const r = await assignResellerRequest(order, {
       source: REFERRAL_CODE ? "RESELLER_LINK" : "MAIN_WEBSITE",
       refCode: REFERRAL_CODE || ""
@@ -739,20 +758,14 @@ async function assignLead(order, button) {
 
     const lead = r.data;
 
-    // New first-claim flow:
-    // Website -> Supabase lead -> Customer Bot -> reseller broadcast -> first claim.
     if (lead.status === "WAITING_CUSTOMER" && lead.telegramUrl) {
       activeLead = lead;
       saveLead(activeLead);
       updateResume();
-
-      // Do NOT show the old "Reseller Rasmi Ditemui" modal.
       window.location.href = lead.telegramUrl;
       return;
     }
 
-    // Safety guard: never expose the legacy auto-assigned reseller flow
-    // on the main website after first-claim migration.
     throw new Error(
       "Website API masih menggunakan flow reseller lama. Sila update deployment API production."
     );
