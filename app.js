@@ -37,26 +37,6 @@ function applyThemeBackground() {
   img.src = freshUrl;
 }
 
-
-// === NUMO SPECIAL CELEBRATION BANNER ===
-// Tukar gambar sahaja di GitHub: special-banner.jpg
-// Jika fail tiada/gagal load, ruang banner disorok secara automatik.
-const SPECIAL_BANNER_FILE = "special-banner.jpg";
-
-function applyCelebrationBanner() {
-  const box = document.getElementById("celebrationBanner");
-  const img = document.getElementById("celebrationBannerImg");
-  if (!box || !img) return;
-
-  const freshUrl = `${SPECIAL_BANNER_FILE}?v=${Date.now()}`;
-  img.onload = () => box.classList.remove("hidden");
-  img.onerror = () => {
-    box.classList.add("hidden");
-    img.removeAttribute("src");
-  };
-  img.src = freshUrl;
-}
-
 let selectedCategory = "Semua";
 let activeLead = null;
 let pendingSookaOrder = null;
@@ -78,7 +58,7 @@ let uiText = {
   viewPackages: "Lihat Pakej",
   closePackages: "Tutup Pakej",
   buyNow: "Beli Sekarang",
-  assigning: "Mencari reseller...",
+  assigning: "Menyediakan permintaan...",
   openTelegram: "Buka Telegram Reseller",
   findAnother: "Hubungi Admin",
   findingAnother: "Membuka Telegram admin...",
@@ -175,16 +155,16 @@ const PRODUCTS = [
     ]
   },
   {
-    name: "HBO MAX",
-    display: "HBO Max",
-    image: "Numologo.jpg",
+    name: "SOOKA PREMIUM",
+    display: "Sooka Premium",
+    image: "sooka.jpg",
     category: "Streaming",
-    desc: "Streaming premium HBO Max dengan profile sendiri.",
+    desc: "Pilih device TV, Phone atau Tablet.",
     plans: [
-      { duration: "1 Bulan", price: "RM20" },
-      { duration: "2 Bulan", price: "RM38" },
-      { duration: "6 Bulan", price: "RM105" },
-      { duration: "12 Bulan", price: "RM195" }
+      { duration: "1 Bulan", price: "RM25" },
+      { duration: "2 Bulan", price: "RM46" },
+      { duration: "6 Bulan", price: "RM120" },
+      { duration: "12 Bulan", price: "RM216" }
     ]
   },
   {
@@ -261,7 +241,6 @@ const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", async () => {
   applyThemeBackground();
-  applyCelebrationBanner();
   await loadUiText();
   await loadEditable();
 
@@ -743,37 +722,43 @@ async function assignLead(order, button) {
 
   if (button) {
     button.disabled = true;
-    button.textContent = uiText.assigning;
+    button.textContent = "Menyediakan permintaan...";
   }
 
   try {
-    let r = await assignResellerRequest(order, {
+    // Backend production now creates a Supabase website lead instead of
+    // assigning a reseller directly. Valid referral handling remains backend-side.
+    const r = await assignResellerRequest(order, {
       source: REFERRAL_CODE ? "RESELLER_LINK" : "MAIN_WEBSITE",
       refCode: REFERRAL_CODE || ""
     });
 
-    if (REFERRAL_CODE && !isValidReferralAssignResult(r)) {
-      r = await assignResellerRequest(order, {
-        source: "REFERRAL_FALLBACK",
-        refCode: "",
-        fallbackFromRef: REFERRAL_CODE
-      });
-
-      if (r.ok && r.data) {
-        r.data.referralFallback = true;
-        r.data.fallbackFromRef = REFERRAL_CODE;
-        r.data.status = "REASSIGNED";
-      }
+    if (!r || !r.ok || !r.data) {
+      throw new Error((r && r.error) || "Permintaan tidak berjaya.");
     }
 
-    if (!r.ok) throw new Error(r.error || "Assign failed");
+    const lead = r.data;
 
-    activeLead = r.data;
-    saveLead(activeLead);
-    updateResume();
-    showHandoff(activeLead);
+    // New first-claim flow:
+    // Website -> Supabase lead -> Customer Bot -> reseller broadcast -> first claim.
+    if (lead.status === "WAITING_CUSTOMER" && lead.telegramUrl) {
+      activeLead = lead;
+      saveLead(activeLead);
+      updateResume();
+
+      // Do NOT show the old "Reseller Rasmi Ditemui" modal.
+      window.location.href = lead.telegramUrl;
+      return;
+    }
+
+    // Safety guard: never expose the legacy auto-assigned reseller flow
+    // on the main website after first-claim migration.
+    throw new Error(
+      "Website API masih menggunakan flow reseller lama. Sila update deployment API production."
+    );
+
   } catch (e) {
-    alert(e.message || "Maaf, sistem tidak dapat mencari reseller sekarang. Sila cuba semula.");
+    alert(e.message || "Maaf, permintaan tidak dapat diproses sekarang. Sila cuba semula.");
   } finally {
     if (button) {
       button.disabled = false;
