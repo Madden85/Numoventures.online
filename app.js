@@ -126,11 +126,11 @@ const PRODUCTS = [
     category: "Streaming",
     desc: "Private profile dan warranty penuh.",
     plans: [
-      { duration: "1 Bulan", price: "RM25" },
-      { duration: "2 Bulan", price: "RM50" },
-      { duration: "3 Bulan Promo", label: "3 Bulan", price: "RM75" },
-      { duration: "6 Bulan", price: "RM150" },
-      { duration: "12 Bulan", price: "RM300" }
+      { duration: "1 Bulan", price: "RM28" },
+      { duration: "2 Bulan", price: "RM56" },
+      { duration: "3 Bulan Promo", label: "3 Bulan", price: "RM84" },
+      { duration: "6 Bulan", price: "RM168" },
+      { duration: "12 Bulan", price: "RM336" }
     ]
   },
   {
