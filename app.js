@@ -4,7 +4,10 @@
  * Hot Selling + Auto Assign Reseller + 5-min Admin Handoff
  ***********************/
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxVm79WzB0PnyDcFPM9hWl4Lj1smvQJe2EaoeGzNAExzp8PTbHwdfxmJ-Uqbml2RGlF/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxVm79WzB0PnyDcFPM9hWl4Lj1smvQJe2EaoeGzNAExzp8PTbHwdfxmJ-Uqbml2RGlF/exec"; // assignReseller flow only
+const SUPABASE_URL = "https://lqsgcpkrmhckptedklsl.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WhVmEdfeqig54l3GRcINLg_W4QfUi_E";
+const SUPABASE_CATALOG_RPC = "get_website_catalog";
 const REFERRAL_CODE = getReferralCodeFromUrl();
 const STORAGE_KEY = "numo_active_lead_v75";
 const ADMIN_TELEGRAM_USERNAME = "ownernumoventures";
@@ -78,7 +81,7 @@ let uiText = {
   viewPackages: "Lihat Pakej",
   closePackages: "Tutup Pakej",
   buyNow: "Beli Sekarang",
-  assigning: "Menyediakan permintaan...",
+  assigning: "Mencari reseller...",
   openTelegram: "Buka Telegram Reseller",
   findAnother: "Hubungi Admin",
   findingAnother: "Membuka Telegram admin...",
@@ -126,11 +129,11 @@ const PRODUCTS = [
     category: "Streaming",
     desc: "Private profile dan warranty penuh.",
     plans: [
-      { duration: "1 Bulan", price: "RM28" },
-      { duration: "2 Bulan", price: "RM56" },
-      { duration: "3 Bulan Promo", label: "3 Bulan", price: "RM84" },
-      { duration: "6 Bulan", price: "RM168" },
-      { duration: "12 Bulan", price: "RM336" }
+      { duration: "1 Bulan", price: "RM25" },
+      { duration: "2 Bulan", price: "RM50" },
+      { duration: "3 Bulan Promo", label: "3 Bulan", price: "RM75" },
+      { duration: "6 Bulan", price: "RM150" },
+      { duration: "12 Bulan", price: "RM300" }
     ]
   },
   {
@@ -410,28 +413,134 @@ async function loadControl() {
   setSync(uiText.syncing, "warn");
 
   try {
-    const r = await jsonp({
-      mode: "getWebsiteControl",
-      _: Date.now()
-    });
-
-    if (!r.ok) throw new Error(r.error);
+    const rows = await loadSupabaseCatalog();
+    applySupabaseCatalog(rows);
 
     control = {
-      stock: r.data?.stock || [],
-      promos: r.data?.promos || [],
-      hotSelling: r.data?.hotSelling || [],
-      meta: r.data?.meta || {},
+      stock: buildStockFromCatalog(rows),
+      promos: [],
+      hotSelling: [],
+      meta: { source: "SUPABASE", loadedAt: new Date().toISOString() },
       loaded: true
     };
 
-    setSync(uiText.liveStockPromo, "live");
+    setSync("Live price & slot", "live");
   } catch (e) {
+    console.error("Supabase catalog sync failed:", e);
     control.loaded = false;
     setSync(uiText.offlinePriceMode, "warn");
   } finally {
     controlLoading = false;
   }
+}
+
+async function loadSupabaseCatalog() {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${SUPABASE_CATALOG_RPC}`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_PUBLISHABLE_KEY,
+      "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: "{}",
+    cache: "no-store"
+  });
+
+  if (!r.ok) {
+    const detail = await r.text();
+    throw new Error(`Catalog HTTP ${r.status}: ${detail}`);
+  }
+
+  const rows = await r.json();
+  if (!Array.isArray(rows)) throw new Error("Invalid catalog response");
+  return rows;
+}
+
+function moneyRM(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "RM0";
+  return `RM${Number.isInteger(n) ? n.toFixed(0) : n.toFixed(2)}`;
+}
+
+function catalogTarget(row) {
+  const code = normalize(row.product_code);
+  const map = {
+    NETFLIX: { product: "NETFLIX PREMIUM", section: "ALL" },
+    DISNEY: { product: "DISNEY+ HOTSTAR", section: "ALL" },
+    HBOMAX: { product: "HBO MAX", section: "ALL" },
+    VIU: { product: "VIU PREMIUM", section: "ALL" },
+    IQIYI: { product: "iQIYI PREMIUM", section: "ALL" },
+    PRIMEVIDEO: { product: "PRIME VIDEO", section: "ALL" },
+    SPOTIFY: { product: "SPOTIFY PREMIUM", section: "ALL" },
+    YOUTUBE_OWN: { product: "YOUTUBE PREMIUM", section: "Email Sendiri" },
+    YOUTUBE_SELLER: { product: "YOUTUBE PREMIUM", section: "Email Seller" }
+  };
+  return map[code] || null;
+}
+
+function applySupabaseCatalog(rows) {
+  rows.forEach(row => {
+    const target = catalogTarget(row);
+    if (!target) return;
+
+    const p = findProduct(target.product);
+    if (!p) return;
+
+    const plans = p.sections
+      ? (p.sections.find(x => normalize(x.title) === normalize(target.section))?.plans || [])
+      : (p.plans || []);
+
+    const plan = plans.find(x =>
+      normalize(x.duration) === normalize(row.plan_code) ||
+      normalize(x.label || "") === normalize(row.plan_code) ||
+      normalize(displayDuration(x.duration)) === normalize(displayDuration(row.plan_code))
+    );
+    if (!plan) {
+      console.warn("No local plan mapping for", row.product_code, row.plan_code);
+      return;
+    }
+
+    plan.price = moneyRM(row.selling_price);
+    plan.basePrice = moneyRM(row.base_price);
+    plan.promoPrice = row.promo_price == null ? null : moneyRM(row.promo_price);
+  });
+}
+
+function buildStockFromCatalog(rows) {
+  const byKey = new Map();
+
+  rows.forEach(row => {
+    const target = catalogTarget(row);
+    if (!target) return;
+    const key = `${normalize(target.product)}|${normalize(target.section)}`;
+    if (!byKey.has(key)) {
+      const slots = Number(row.available_slots || 0);
+      byKey.set(key, {
+        product: target.product,
+        section: target.section,
+        status: row.is_available && slots > 0 ? "ON" : "OFF",
+        stockText: row.is_available && slots > 0 ? `${slots} slot kosong` : uiText.soldOutLabel,
+        availableSlots: slots
+      });
+    }
+  });
+
+  const result = [...byKey.values()];
+
+  // Non-YouTube products use ALL. YouTube availability is section-specific.
+  const yt = result.filter(x => normalize(x.product) === "YOUTUBE PREMIUM");
+  if (yt.length) {
+    const slots = yt.reduce((sum, x) => sum + Number(x.availableSlots || 0), 0);
+    result.push({
+      product: "YOUTUBE PREMIUM",
+      section: "ALL",
+      status: yt.some(x => normalize(x.status) === "ON") ? "ON" : "OFF",
+      stockText: slots > 0 ? `${slots} slot kosong` : uiText.soldOutLabel,
+      availableSlots: slots
+    });
+  }
+
+  return result;
 }
 
 function isDataLoading() {
@@ -743,35 +852,37 @@ async function assignLead(order, button) {
 
   if (button) {
     button.disabled = true;
-    button.textContent = "Menyediakan permintaan...";
+    button.textContent = uiText.assigning;
   }
 
   try {
-    const r = await assignResellerRequest(order, {
+    let r = await assignResellerRequest(order, {
       source: REFERRAL_CODE ? "RESELLER_LINK" : "MAIN_WEBSITE",
       refCode: REFERRAL_CODE || ""
     });
 
-    if (!r || !r.ok || !r.data) {
-      throw new Error((r && r.error) || "Permintaan tidak berjaya.");
+    if (REFERRAL_CODE && !isValidReferralAssignResult(r)) {
+      r = await assignResellerRequest(order, {
+        source: "REFERRAL_FALLBACK",
+        refCode: "",
+        fallbackFromRef: REFERRAL_CODE
+      });
+
+      if (r.ok && r.data) {
+        r.data.referralFallback = true;
+        r.data.fallbackFromRef = REFERRAL_CODE;
+        r.data.status = "REASSIGNED";
+      }
     }
 
-    const lead = r.data;
+    if (!r.ok) throw new Error(r.error || "Assign failed");
 
-    if (lead.status === "WAITING_CUSTOMER" && lead.telegramUrl) {
-      activeLead = lead;
-      saveLead(activeLead);
-      updateResume();
-      window.location.href = lead.telegramUrl;
-      return;
-    }
-
-    throw new Error(
-      "Website API masih menggunakan flow reseller lama. Sila update deployment API production."
-    );
-
+    activeLead = r.data;
+    saveLead(activeLead);
+    updateResume();
+    showHandoff(activeLead);
   } catch (e) {
-    alert(e.message || "Maaf, permintaan tidak dapat diproses sekarang. Sila cuba semula.");
+    alert(e.message || "Maaf, sistem tidak dapat mencari reseller sekarang. Sila cuba semula.");
   } finally {
     if (button) {
       button.disabled = false;
