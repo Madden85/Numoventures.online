@@ -131,9 +131,9 @@ const PRODUCTS = [
     plans: [
       { duration: "1 Bulan", price: "RM25" },
       { duration: "2 Bulan", price: "RM50" },
-      { duration: "3 Bulan Promo", label: "3 Bulan", price: "RM75" },
-      { duration: "6 Bulan", price: "RM150" },
-      { duration: "12 Bulan", price: "RM300" }
+      { duration: "3 Bulan Promo", label: "3 Bulan", price: "RM75", giftNote: "Percuma iQIYI / Viu 1 Bulan" },
+      { duration: "6 Bulan", price: "RM150", giftNote: "Percuma iQIYI / Viu 2 Bulan" },
+      { duration: "12 Bulan", price: "RM300", giftNote: "Percuma iQIYI / Viu 4 Bulan" }
     ]
   },
   {
@@ -756,7 +756,8 @@ function renderPlans(product, plans, section) {
       </span>
     ` : "";
 
-    const note = on && promo.note ? `<div class="note">${safe(promo.note)}</div>` : "";
+    const promoNote = on && promo.note ? `<div class="note">${safe(promo.note)}</div>` : "";
+    const giftNote = plan.giftNote ? `<div class="note">${safe(plan.giftNote)}</div>` : "";
 
     const button = ok ? `
       <button
@@ -774,7 +775,8 @@ function renderPlans(product, plans, section) {
           <span class="plan-name">${safe(plan.label || displayDuration(plan.duration))}</span>
           ${badge}
         </div>
-        ${note}
+        ${promoNote}
+        ${giftNote}
         <div class="plan-bottom">
           <div>
             <span class="price">${safe(price)}</span>
